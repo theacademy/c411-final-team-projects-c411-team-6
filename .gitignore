@@ -39,4 +39,4 @@ build/
 
 #Secrets, env vars
 .env
-application.secrets
+
