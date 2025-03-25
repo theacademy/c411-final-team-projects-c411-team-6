@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -28,24 +30,28 @@ public class PlaidController {
         }
     }
 
-    @PostMapping("/exchange-token")
-    public ResponseEntity<String> exchangeToken(@RequestBody Map<String, String> body) {
+    @PostMapping("/exchange-public-token")
+    public ResponseEntity<Map<String, String>> exchangePublicToken(@RequestBody Map<String, String> requestBody) {
+        String publicToken = requestBody.get("public_token");
+        String accessToken = null;
         try {
-            String publicToken = body.get("public_token");
-            String accessToken = plaidService.exchangePublicToken(publicToken);
-            return ResponseEntity.ok(accessToken);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", e.getMessage()).toString());
+            accessToken = plaidService.exchangePublicToken(publicToken);
+        } catch (IOException e) {
+            System.out.println("Error exchanging public token: " + e.getMessage());
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Error exchanging public token"));
         }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("access_token", accessToken);
+        return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/create-link-token")
     public ResponseEntity<String> createLinkToken(@RequestParam String userId) {
         String linkToken;
         try{
-            linkToken = plaidService.createLinkToken();
+            linkToken = plaidService.createLinkToken(userId);
             return ResponseEntity.ok(linkToken);
         } catch(IOException e){
             return ResponseEntity
