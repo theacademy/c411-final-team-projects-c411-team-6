@@ -36,6 +36,7 @@ public class PlaidController {
         String accessToken = null;
         try {
             accessToken = plaidService.exchangePublicToken(publicToken);
+
         } catch (IOException e) {
             System.out.println("Error exchanging public token: " + e.getMessage());
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Error exchanging public token"));
