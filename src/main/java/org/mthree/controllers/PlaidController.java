@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/plaid")
 public class PlaidController {
@@ -25,5 +27,17 @@ public class PlaidController {
     public ResponseEntity<String> exchangeToken(@RequestBody String publicToken) {
         String accessToken = plaidService.exchangePublicToken(publicToken);
         return ResponseEntity.ok(accessToken);
+    }
+
+    @PostMapping("/create-link-token")
+    public ResponseEntity<String> createLinkToken(){
+        String linkToken;
+        try{
+            linkToken =plaidService.createLinkToken();
+        } catch(IOException e){
+            System.out.println(e);
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(linkToken);
     }
 }
