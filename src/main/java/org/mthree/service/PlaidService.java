@@ -64,9 +64,9 @@ public class PlaidService {
     }
 
 
-    public String createLinkToken() throws IOException {
+    public String createLinkToken(String userId) throws IOException {
         LinkTokenCreateRequestUser user = new LinkTokenCreateRequestUser()
-                .clientUserId("user-id-123"); // Use a real unique user ID in prod
+                .clientUserId(userId); // Use a real unique user ID in prod
 
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
                 .user(user)
