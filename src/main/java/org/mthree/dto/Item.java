@@ -11,14 +11,18 @@ public class Item {
     private String plaidItemId;
     private String plaidInstitutionId;
     private String status;
+    private String createdAt;
+    private String updatedAt;
 
 
-    public Item(Long userId, String plaidAccessToken, String plaidItemId, String plaidInstitutionId, String status) {
+    public Item(Long userId, String plaidAccessToken, String plaidItemId, String plaidInstitutionId, String status, String createdAt, String updatedAt) {
         this.userId = userId;
         this.plaidAccessToken = plaidAccessToken;
         this.plaidItemId = plaidItemId;
         this.plaidInstitutionId = plaidInstitutionId;
         this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -68,6 +72,12 @@ public class Item {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getCreatedAt() { return createdAt; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
+    public String getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
 
 }
 
