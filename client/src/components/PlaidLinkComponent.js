@@ -6,10 +6,21 @@ const PlaidLinkComponent = () => {
 
   // Fetch link token from backend
   useEffect(() => {
-    fetch("http://localhost:8080/plaid/create-link-token?userId=1") // Replace with your backend URL
-      .then((response) => response.json())
-      .then((data) => setLinkToken(data));
+    fetch("http://localhost:8080/plaid/create-link-token?userId=1", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId: 1 })
+    })
+        .then((res) => res.text())
+        .then((token) => {
+          console.log("Received link token:", token);
+          setLinkToken(token); // <-- this is critical
+        })
+        .catch((err) => console.error("Failed to fetch:", err));
   }, []);
+
 
   const { open, ready } = usePlaidLink({
     token: linkToken,
