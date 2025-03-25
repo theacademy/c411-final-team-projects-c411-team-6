@@ -6,10 +6,12 @@ import org.mthree.dto.Statement;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 
+@Repository
 public class StatementDaoImpl implements StatementDao {
 
     private final JdbcTemplate jdbc;
