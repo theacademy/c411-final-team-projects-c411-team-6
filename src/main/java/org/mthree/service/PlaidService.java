@@ -33,35 +33,34 @@ public class PlaidService {
     public PlaidService(PlaidApi plaidApi){
         this.plaidApi = plaidApi;
     }
-    public String createSandboxPublicToken() {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = baseUrl + "/sandbox/public_token/create";
+    public String createSandboxPublicToken() throws IOException {
+        SandboxPublicTokenCreateRequest request = new SandboxPublicTokenCreateRequest()
+                .institutionId("ins_109508")
+                .initialProducts(List.of(Products.AUTH, Products.TRANSACTIONS));
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("client_id", clientId);
-        body.put("secret", secret);
-        body.put("institution_id", "ins_109508"); // Sandbox test bank
-        body.put("initial_products", List.of("auth", "transactions"));
+        Response<SandboxPublicTokenCreateResponse> response =
+                plaidApi.sandboxPublicTokenCreate(request).execute();
 
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body);
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
-
-        return (String) response.getBody().get("public_token");
+        if (response.isSuccessful()) {
+            return response.body().getPublicToken();
+        } else {
+            throw new RuntimeException("Failed to create sandbox public token: " + response.errorBody().string());
+        }
     }
 
-    public String exchangePublicToken(String publicToken) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = baseUrl + "/item/public_token/exchange";
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("client_id", clientId);
-        body.put("secret", secret);
-        body.put("public_token", publicToken);
+    public String exchangePublicToken(String publicToken) throws IOException {
+        ItemPublicTokenExchangeRequest request = new ItemPublicTokenExchangeRequest()
+                .publicToken(publicToken);
 
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body);
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
+        Response<ItemPublicTokenExchangeResponse> response =
+                plaidApi.itemPublicTokenExchange(request).execute();
 
-        return (String) response.getBody().get("access_token");
+        if (response.isSuccessful()) {
+            return response.body().getAccessToken();
+        } else {
+            throw new RuntimeException("Failed to exchange public token: " + response.errorBody().string());
+        }
     }
 
 
@@ -71,7 +70,7 @@ public class PlaidService {
 
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
                 .user(user)
-                .clientName("FlowChart")
+                .clientName("FlowTrack")
                 .products(List.of(com.plaid.client.model.Products.AUTH)) // add other products as needed
                 .countryCodes(List.of(CountryCode.US))
                 .language("en");
