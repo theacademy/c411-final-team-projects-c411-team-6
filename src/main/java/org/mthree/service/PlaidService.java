@@ -22,14 +22,6 @@ public class PlaidService {
 
     private final PlaidApi plaidApi;
 
-    @Value("${plaid.client.id}")
-    private String clientId;
-
-    @Value("${plaid.secret}")
-    private String secret;
-
-    private final String baseUrl = "https://sandbox.plaid.com";
-
     public PlaidService(PlaidApi plaidApi){
         this.plaidApi = plaidApi;
     }
@@ -68,10 +60,11 @@ public class PlaidService {
         LinkTokenCreateRequestUser user = new LinkTokenCreateRequestUser()
                 .clientUserId(userId); // Use a real unique user ID in prod
 
+
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
                 .user(user)
                 .clientName("FlowTrack")
-                .products(List.of(com.plaid.client.model.Products.AUTH)) // add other products as needed
+                .products(List.of(com.plaid.client.model.Products.AUTH))
                 .countryCodes(List.of(CountryCode.US))
                 .language("en");
 
