@@ -11,9 +11,10 @@ public class User {
 
     public User() {}
 
-    public User(int id, String username, String createdAt, String updatedAt) {
+    public User(int id, String username, String password, String createdAt, String updatedAt) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
