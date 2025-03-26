@@ -1,15 +1,19 @@
 import React from "react";
-import RegisterComponent from "./components/RegisterComponent";
-import PlaidLinkComponent from "./components/PlaidLinkComponent";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from './Home';
+import Login from './components/LoginComponent';
+import Register from './components/RegisterComponent';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h1>Welcome to the Financial App</h1>
-      <RegisterComponent />
-      <PlaidLinkComponent />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
