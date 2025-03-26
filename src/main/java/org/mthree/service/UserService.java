@@ -21,10 +21,6 @@ public class UserService {
     }
 
 
-    public int saveUser(String username, String password) {
-        return userDao.saveUser(username, password);
-    }
-
     public User createUser(String username, String password) {
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
         int userId = userDao.saveUser(username, password);  // Save user and password

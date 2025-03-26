@@ -1,67 +1,57 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
-    // Clear previous error/success messages
-    setError('');
-    setSuccessMessage('');
+    const userData = { username, password };
 
     try {
-      // Send POST request to the server to register the user
-      const response = await axios.post('http://localhost:8080/users/register', {
-        username,
-        password,
+      // Send a POST request to register the user
+      const response = await fetch("http://localhost:8080/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
       });
 
-      // Handle success response
-      if (response.status === 200) {
-        setSuccessMessage('Registration successful! You can now log in.');
-      }
-    } catch (err) {
-      // Handle error response
-      if (err.response && err.response.data) {
-        setError(err.response.data.error || 'An error occurred during registration.');
+      if (response.ok) {
+        // If registration is successful, redirect to the Plaid link page
+        navigate("/link-account");
       } else {
-        setError('An unexpected error occurred.');
+
+        console.error("Registration failed");
       }
+    } catch (error) {
+      console.error("Error occurred during registration", error);
     }
   };
 
   return (
     <div>
       <h2>Register</h2>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
       <form onSubmit={handleRegister}>
         <div>
-          <label>Username</label>
+          <label>Username:</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
           />
         </div>
-
         <div>
-          <label>Password</label>
+          <label>Password:</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
         </div>
-
         <button type="submit">Register</button>
       </form>
     </div>

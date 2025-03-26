@@ -19,9 +19,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user.getUsername(), user.getPassword());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);  // Return created user
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        try {
+            User createdUser = userService.createUser(user.getUsername(), user.getPassword());
+            // Debugging log for successful user creation
+            System.out.println("User created successfully: " + createdUser.getUsername());
+            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User creation failed: " + e.getMessage());
+        }
     }
 
     @PostMapping("/login")
