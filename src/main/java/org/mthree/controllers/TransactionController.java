@@ -26,7 +26,7 @@ public class TransactionController {
 
     // Get all transactions by userId
     @GetMapping("")
-    public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam String userId) {
+    public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam Long userId) {
         try {
             List<Transaction> items = transactionService.getTransactions(userId);
             return ResponseEntity.ok(items);
@@ -39,7 +39,7 @@ public class TransactionController {
     // Get all transactions by date
     @GetMapping("/by-date")
     public ResponseEntity<List<Transaction>> getTransactionsByDateRange(
-            @RequestParam String userId,
+            @RequestParam Long userId,
             @RequestParam String startDate,
             @RequestParam String endDate) {
         try {
@@ -61,7 +61,7 @@ public class TransactionController {
     // Get all transactions by category
     @GetMapping("/by-category")
     public ResponseEntity<List<Transaction>> getTransactionsByCategory(
-            @RequestParam String userId,
+            @RequestParam Long userId,
             @RequestParam String category) {
         try {
             List<Transaction> all = transactionService.getTransactions(userId);

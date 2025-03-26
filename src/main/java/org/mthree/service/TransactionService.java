@@ -22,8 +22,8 @@ public class TransactionService {
         this.itemService = itemService;
     }
 
-    public List<Transaction> getTransactions(String userId) {
-        List<Item> userItems = itemService.getItemsById(userId);
+    public List<Transaction> getTransactions(Long userId) {
+        List<Item> userItems = itemService.getItemsById(userId.toString());
         List<Transaction> allTxns = new ArrayList<>();
 
         for (Item item : userItems) {
@@ -40,6 +40,7 @@ public class TransactionService {
                     txn.setName(plaidTxn.getName());
                     txn.setAmount(plaidTxn.getAmount());
                     txn.setDate(plaidTxn.getDate());
+                    txn.setUserId(userId);
                     txn.setType(plaidTxn.getTransactionType().toString());
                     txn.setCategory(plaidTxn.getCategory() != null && !plaidTxn.getCategory().isEmpty()
                             ? plaidTxn.getCategory().get(0)
