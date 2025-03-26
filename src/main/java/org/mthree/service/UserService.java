@@ -31,6 +31,12 @@ public class UserService {
         return new User(userId, username, password, currentTime, currentTime);  // Return user with generated userId
     }
 
+    public boolean checkUserCredentials(String username, String password) {
+        User user = userDao.getUserByUsername(username); // Get user by username
+        // If user exists and password matches, return true
+        return user != null && user.getPassword().equals(password);// Return false if user doesn't exist or password doesn't match
+    }
+
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }

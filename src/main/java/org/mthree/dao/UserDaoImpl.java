@@ -24,6 +24,15 @@ public class UserDaoImpl implements UserDao{
             rs.getString("updated_at")
     );
 
+    public User getUserByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, userRowMapper, username);
+        } catch (Exception e) {
+            return null; // If no user is found, return null
+        }
+    }
+
     public int saveUser(String username, String password) {
         String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
         return jdbcTemplate.update(sql, username, password);

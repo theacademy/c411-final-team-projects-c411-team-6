@@ -9,4 +9,5 @@ public interface UserDao {
     List<User> getAllUsers();
     User getUserById(int id);
     int deleteUserById(int id);
+    User getUserByUsername(String username);
 }

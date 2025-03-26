@@ -24,6 +24,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);  // Return created user
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody User user) {
+        boolean isValidUser = userService.checkUserCredentials(user.getUsername(), user.getPassword());
+        if (isValidUser) {
+            // For now, return a success message
+            return ResponseEntity.ok("Login successful!");
+        } else {
+            // Return error message if username/password is invalid
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+        }
+    }
+
     @GetMapping
     public List<User> getUsers() {
         return userService.getAllUsers();
