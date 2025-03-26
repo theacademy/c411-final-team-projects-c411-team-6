@@ -58,6 +58,23 @@ public class TransactionController {
         }
     }
 
+    // Get all transactions by category
+    @GetMapping("/by-category")
+    public ResponseEntity<List<Transaction>> getTransactionsByCategory(
+            @RequestParam String userId,
+            @RequestParam String category) {
+        try {
+            List<Transaction> all = transactionService.getTransactions(userId);
+            List<Transaction> filtered = all.stream()
+                    .filter(txn -> txn.getCategory().equalsIgnoreCase(category))
+                    .toList();
+            return ResponseEntity.ok(filtered);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     @GetMapping("/debug")
     public ResponseEntity<?> debugTransactions(@RequestParam String accessToken) {
         try {
