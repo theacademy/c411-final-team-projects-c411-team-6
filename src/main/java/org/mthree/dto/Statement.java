@@ -1,17 +1,16 @@
 package org.mthree.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class Statement {
 
     private int id;
-    private int user_id;
+    private int userId;
     private int month;
     private int year;
-    private BigDecimal total_income;
-    private BigDecimal total_expenses;
-    private BigDecimal net_cash_flow;
+    private BigDecimal totalIncome;
+    private BigDecimal totalExpenses;
+    private BigDecimal netCashFlow;
 
 
     public int getId() {
@@ -22,12 +21,12 @@ public class Statement {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getMonth() {
@@ -46,28 +45,28 @@ public class Statement {
         this.year = year;
     }
 
-    public BigDecimal getTotal_income() {
-        return total_income;
+    public BigDecimal getTotalIncome() {
+        return totalIncome;
     }
 
-    public void setTotal_income(BigDecimal total_income) {
-        this.total_income = total_income;
+    public void setTotalIncome(BigDecimal totalIncome) {
+        this.totalIncome = totalIncome;
     }
 
-    public BigDecimal getTotal_expenses() {
-        return total_expenses;
+    public BigDecimal getTotalExpenses() {
+        return totalExpenses;
     }
 
-    public void setTotal_expenses(BigDecimal total_expenses) {
-        this.total_expenses = total_expenses;
+    public void setTotalExpenses(BigDecimal totalExpenses) {
+        this.totalExpenses = totalExpenses;
     }
 
-    public BigDecimal getNet_cash_flow() {
-        return net_cash_flow;
+    public BigDecimal getNetCashFlow() {
+        return netCashFlow;
     }
 
-    public void setNet_cash_flow(BigDecimal net_cash_flow) {
-        this.net_cash_flow = net_cash_flow;
+    public void setNetCashFlow(BigDecimal netCashFlow) {
+        this.netCashFlow = netCashFlow;
     }
 
 

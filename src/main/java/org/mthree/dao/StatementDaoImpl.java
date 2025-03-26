@@ -1,5 +1,7 @@
 package org.mthree.dao;
 
+
+import org.mthree.dao.mappers.AssetMapper;
 import org.mthree.dao.mappers.StatementMapper;
 import org.mthree.dto.Statement;
 import org.springframework.dao.DataAccessException;
@@ -21,17 +23,21 @@ public class StatementDaoImpl implements StatementDao {
 
     @Override
     public Statement createNewStatement(Statement statement) {
-        final String INSERT_STATEMENT = "INSERT INTO statements(user_id, month, year, total_income, total_expenses) VALUES(?, ?, ?, ?, ?)";
+
+        final String INSERT_STATEMENT = "INSERT INTO statements(user_id, month, year, total_income, total_expenses, net_cash_flow) VALUES(?, ?, ?, ?, ?, ?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(INSERT_STATEMENT, java.sql.Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, statement.getUser_id());
-            ps.setInt(2, statement.getMonth());
-            ps.setInt(3, statement.getYear());
-            ps.setBigDecimal(4, statement.getTotal_income());
-            ps.setBigDecimal(5, statement.getTotal_expenses());
-            return ps;
+            PreparedStatement prepared = connection.prepareStatement(INSERT_STATEMENT, java.sql.Statement.RETURN_GENERATED_KEYS);
+
+            prepared.setInt(1, statement.getUserId());
+            prepared.setInt(2, statement.getMonth());
+            prepared.setInt(3, statement.getYear());
+            prepared.setBigDecimal(4, statement.getTotalIncome());
+            prepared.setBigDecimal(5, statement.getTotalExpenses());
+            prepared.setBigDecimal(6, statement.getNetCashFlow());
+
+            return prepared;
         }, keyHolder);
 
         statement.setId(keyHolder.getKey().intValue());
@@ -56,20 +62,26 @@ public class StatementDaoImpl implements StatementDao {
 
     @Override
     public void updateStatement(Statement statement) {
-        final String UPDATE_STATEMENT = "UPDATE statements SET user_id = ?, month = ?, year = ?, total_income = ?, total_expenses = ? WHERE id = ?";
+
+        final String UPDATE_STATEMENT = "UPDATE statements SET user_id = ?, month = ?, year = ?, total_income = ?, total_expenses = ?, net_cash_flow = ? WHERE id = ?";
 
         jdbc.update(UPDATE_STATEMENT,
-                statement.getUser_id(),
+                statement.getUserId(),
                 statement.getMonth(),
                 statement.getYear(),
-                statement.getTotal_income(),
-                statement.getTotal_expenses(),
+                statement.getTotalIncome(),
+                statement.getTotalExpenses(),
+                statement.getNetCashFlow(),
                 statement.getId());
+
     }
 
     @Override
     public void deleteStatement(int id) {
-        final String DELETE_STATEMENT = "DELETE FROM statements WHERE id = ?";
+
+        final String DELETE_STATEMENT = "DELETE FROM statement WHERE id = ?";
         jdbc.update(DELETE_STATEMENT, id);
+
     }
 }
+

@@ -1,7 +1,11 @@
+package org.mthree.service;
+
 import org.mthree.dao.UserDao;
 import org.mthree.dto.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -9,16 +13,76 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService{
 
-    private final JdbcTemplate jdbcTemplate;
-    private final UserDao userDao;
+    @Autowired
+    UserDao userDao;
 
-    public UserServiceImpl(JdbcTemplate jdbcTemplate, UserDao userDao) {
-        this.jdbcTemplate = jdbcTemplate;
+    public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
+    }
+
+    @Override
+    public User getUserById(int id) {
+        try {
+            return userDao.getUserById(id);
+        } catch (DataAccessException ex) {
+            User user = new User();
+            user.setUsername("User Not Found");
+            user.setPassword(null);
+            return user;
+        }
+    }
+
+    @Override
+    public User addNewUser(User user) {
+        if (user == null) {
+            return null;
+        }
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty() || user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            user.setUsername("Invalid input: username, or password missing/invalid");
+            user.setPassword(null);
+            return user;
+        }
+        return userDao.createNewUser(user);
+    }
+
+    @Override
+    public User updateUserData(int id, User user) {
+        if (user == null) {
+            return null;
+        }
+        if (id != user.getId()) {
+            user.setUsername("IDs do not match, user not updated");
+            return user;
+        }
+        User existing = userDao.findUserById(id);
+        if (existing == null) {
+            user.setUsername("User not found, update failed");
+            return user;
+        }
+        userDao.updateUser(user);
+        return user;
+    }
+    public User getUserByUsername(String username) {
+        return userDao.getUserByUsername(username);
+    }
+
+    @Override
+    public void deleteUserById(int id) {
+        User user = userDao.findUserById(id);
+        if (user != null) {
+            userDao.deleteUser(id);
+            System.out.println("User ID: " + id + " deleted");
+        } else {
+            System.out.println("User ID: " + id + " not found, deletion skipped");
+        }
+    }
 
     public User createUser(String username, String password) {
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
@@ -34,18 +98,4 @@ public class UserServiceImpl {
         return null;
     }
 
-    public List<User> getAllUsers() {
-        return userDao.getAllUsers();
-    }
-
-    public User getUserById(int id) {
-        return userDao.getUserById(id);
-    }
-
-    public int deleteUserById(int id) {
-        return userDao.deleteUserById(id);
-    }
-
-    public User getUserByUsername(String username) {
-        return userDao.getUserByUsername(username);
-    }
+}
