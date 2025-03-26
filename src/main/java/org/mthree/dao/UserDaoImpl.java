@@ -19,13 +19,23 @@ public class UserDaoImpl implements UserDao{
     private RowMapper<User> userRowMapper = (rs, rowNum) -> new User(
             rs.getInt("id"),
             rs.getString("username"),
+            rs.getString("password"),
             rs.getString("created_at"),
             rs.getString("updated_at")
     );
 
-    public int saveUser(String username) {
-        String sql = "INSERT INTO users (username) VALUES (?)";
-        return jdbcTemplate.update(sql, username);
+    public User getUserByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, userRowMapper, username);
+        } catch (Exception e) {
+            return null; // If no user is found, return null
+        }
+    }
+
+    public int saveUser(String username, String password) {
+        String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+        return jdbcTemplate.update(sql, username, password);
     }
 
     public List<User> getAllUsers() {
