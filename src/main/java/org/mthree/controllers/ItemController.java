@@ -1,5 +1,7 @@
 package org.mthree.controllers;
 
+import com.plaid.client.model.AccountsGetRequest;
+import com.plaid.client.model.AccountsGetResponse;
 import com.plaid.client.model.ItemGetRequest;
 import com.plaid.client.model.ItemGetResponse;
 import com.plaid.client.request.PlaidApi;
@@ -11,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/plaid")
@@ -25,6 +24,7 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    //Creates public token
     @PostMapping("/create-public-token")
     public ResponseEntity<String> createPublicToken() {
         try {
@@ -37,6 +37,7 @@ public class ItemController {
         }
     }
 
+    // Exchanges public token to get access token
     @PostMapping("/exchange-public-token")
     public ResponseEntity<Map<String, String>> exchangePublicToken(@RequestBody Map<String, String> requestBody) {
         String publicToken = requestBody.get("public_token");
@@ -77,7 +78,7 @@ public class ItemController {
         }
     }
 
-
+    //Creates our link token
     @PostMapping("/create-link-token")
     public ResponseEntity<String> createLinkToken(@RequestParam String userId) {
         String linkToken;
@@ -91,6 +92,7 @@ public class ItemController {
         }
     }
 
+    //Gets all items under a userId
     @GetMapping("/get-items")
     public ResponseEntity<List<Item>> getItems(@RequestParam String userId) {
         try {
@@ -100,5 +102,30 @@ public class ItemController {
             e.printStackTrace(); // 👈 this will print the real cause
             return ResponseEntity.status(500).build();
         }
+    }
+
+    // Get all bank accounts under user
+    @GetMapping("/accounts/{userId}")
+    public ResponseEntity<?> getAccounts(@PathVariable String userId) {
+        List<Item> userItems = itemService.getItemsById(userId);
+
+        if (userItems == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No items found.");
+        }
+
+        List<Object> allAccounts = new ArrayList<>();
+        for (Item item : userItems) {
+                try {
+                    AccountsGetRequest request = new AccountsGetRequest().accessToken(item.getPlaidAccessToken());
+                    AccountsGetResponse response = plaidApi.accountsGet(request).execute().body();
+
+                    allAccounts.addAll(response.getAccounts());
+                } catch (IOException e) {
+                    System.out.println("Failed to fetch accounts for access token: " + item.getPlaidAccessToken());
+                    e.printStackTrace();
+                }
+            }
+
+        return ResponseEntity.ok(allAccounts);
     }
 }
