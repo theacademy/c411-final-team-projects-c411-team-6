@@ -61,16 +61,17 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public void deleteUser(int id) {
-        final String DELETE_USER = "DELETE FROM users WHERE id = ?";
-        jdbc.update(DELETE_USER, id);
+    public int deleteUser(int id) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
       
      @Override
     public User createNewUser(User user) {
         final String INSERT_USER = "INSERT INTO users(username, password) VALUES(?, ?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update(connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, user.getUsername());
@@ -88,7 +89,7 @@ public class UserDaoImpl implements UserDao{
     public void updateUser(User user) {
         final String UPDATE_USER = "UPDATE users SET username = ?, password = ? WHERE id = ?";
 
-        jdbc.update(UPDATE_USER,
+        jdbcTemplate.update(UPDATE_USER,
                 user.getUsername(),
                 user.getPassword(),
                 user.getId());

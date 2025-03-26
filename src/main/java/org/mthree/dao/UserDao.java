@@ -12,7 +12,7 @@ public interface UserDao {
 
     void updateUser(User user);
 
-    void deleteUser(int id);
+    int deleteUser(int id);
   
     int saveUser(String username, String password);
   

@@ -14,7 +14,14 @@ public interface UserService {
 
     User updateUserData(int id, User user);
 
-    void deleteUserById(int id);
+    int deleteUserById(int id);
+
+    User getUserByUsername(String username);
+
+    User createUser(String username, String password);
+
+    User checkUserCredentials(String username, String password);
+
 
 }
 

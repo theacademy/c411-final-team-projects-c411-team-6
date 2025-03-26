@@ -69,19 +69,14 @@ public class UserServiceImpl implements UserService{
         userDao.updateUser(user);
         return user;
     }
+
     public User getUserByUsername(String username) {
         return userDao.getUserByUsername(username);
     }
 
     @Override
-    public void deleteUserById(int id) {
-        User user = userDao.getUserById(id);
-        if (user != null) {
-            userDao.deleteUser(id);
-            System.out.println("User ID: " + id + " deleted");
-        } else {
-            System.out.println("User ID: " + id + " not found, deletion skipped");
-        }
+    public int deleteUserById(int id) {
+        return userDao.deleteUser(id);
     }
 
     public User createUser(String username, String password) {
