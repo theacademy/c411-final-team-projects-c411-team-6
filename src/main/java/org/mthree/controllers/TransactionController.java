@@ -28,10 +28,30 @@ public class TransactionController {
     @GetMapping("")
     public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam String userId) {
         try {
-            System.out.println("IN transactions");
             List<Transaction> items = transactionService.getTransactions(userId);
-            System.out.println("Returning transactions");
             return ResponseEntity.ok(items);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    // Get all transactions by date
+    @GetMapping("/by-date")
+    public ResponseEntity<List<Transaction>> getTransactionsByDateRange(
+            @RequestParam String userId,
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+        try {
+            List<Transaction> all = transactionService.getTransactions(userId);
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+
+            List<Transaction> filtered = all.stream()
+                    .filter(txn -> !txn.getDate().isBefore(start) && !txn.getDate().isAfter(end))
+                    .toList();
+
+            return ResponseEntity.ok(filtered);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
