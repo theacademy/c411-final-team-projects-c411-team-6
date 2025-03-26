@@ -19,28 +19,28 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
         try {
             User createdUser = userService.createUser(user.getUsername(), user.getPassword());
             // Debugging log for successful user creation
             System.out.println("User created successfully: " + createdUser.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully!");
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User creation failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
-        boolean isValidUser = userService.checkUserCredentials(user.getUsername(), user.getPassword());
-        if (isValidUser) {
-            // For now, return a success message
-            return ResponseEntity.ok("Login successful!");
+    public ResponseEntity<User> loginUser(@RequestBody User loginRequest) {
+        // Check if user exists and passwords match
+        User user = userService.checkUserCredentials(loginRequest.getUsername(), loginRequest.getPassword());
+        if (user != null) {
+            return ResponseEntity.ok(user);
         } else {
-            // Return error message if username/password is invalid
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
 
     @GetMapping
     public List<User> getUsers() {

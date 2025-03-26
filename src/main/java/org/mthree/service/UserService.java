@@ -27,10 +27,12 @@ public class UserService {
         return new User(userId, username, password, currentTime, currentTime);  // Return user with generated userId
     }
 
-    public boolean checkUserCredentials(String username, String password) {
-        User user = userDao.getUserByUsername(username); // Get user by username
-        // If user exists and password matches, return true
-        return user != null && user.getPassword().equals(password);// Return false if user doesn't exist or password doesn't match
+    public User checkUserCredentials(String username, String password) {
+        User user = userDao.getUserByUsername(username);
+        if (user != null && user.getPassword().equals(password)) {
+            return user; // Return user if username and password match
+        }
+        return null;
     }
 
     public List<User> getAllUsers() {
@@ -43,6 +45,10 @@ public class UserService {
 
     public int deleteUserById(int id) {
         return userDao.deleteUserById(id);
+    }
+
+    public User getUserByUsername(String username) {
+        return userDao.getUserByUsername(username);
     }
 }
 

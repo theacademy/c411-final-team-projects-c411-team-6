@@ -1,62 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const LoginComponent = () => {
+  const [userID, setUserID] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const userData = { username, password };
+  useEffect(() => {
+    if (userID !== null) {
+      console.log("Updated userID:", userID); // This will print the updated userID
+    }
+  }, [userID]); // This effect will run every time userID changes
 
-    try {
-      // Send POST request to login the user
-      const response = await fetch("http://localhost:8080/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        // If login is successful, redirect to Plaid link page
+  const handleLogin = () => {
+    // Send login request to the backend
+    fetch("http://localhost:8080/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        // If login is successful, set the userID
+        console.log("User ID:", data.id);
+        setUserID(data.id); // Assuming the server returns the user object
         navigate("/link-account");
       } else {
-        const error = await response.text();
-        alert(error);
+        setErrorMessage('Invalid credentials');
       }
-    } catch (error) {
-      console.error("Error occurred during login", error);
-      alert("An error occurred during login");
-    }
+    })
+    .catch((error) => {
+      console.error("Login error:", error);
+      setErrorMessage('An error occurred. Please try again later.');
+    });
   };
 
   return (
     <div>
       <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleLogin}>Login</button>
+      {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 };
 
-export default Login;
+export default LoginComponent;
