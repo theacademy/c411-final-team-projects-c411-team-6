@@ -9,6 +9,7 @@ import retrofit2.Response;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -59,10 +60,10 @@ public class ItemService {
 
 
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
-                .user(user)
-                .clientName("FlowTrack")
-                .products(List.of(com.plaid.client.model.Products.AUTH))
-                .countryCodes(List.of(CountryCode.US))
+                .user(new LinkTokenCreateRequestUser().clientUserId("user-id"))
+                .clientName("Your App")
+                .products(Arrays.asList(Products.TRANSACTIONS))
+                .countryCodes(Arrays.asList(CountryCode.US))
                 .language("en");
 
         Response<LinkTokenCreateResponse> response = plaidApi.linkTokenCreate(request).execute();

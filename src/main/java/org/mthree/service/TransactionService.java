@@ -5,9 +5,7 @@ import com.plaid.client.model.TransactionsGetResponse;
 import com.plaid.client.request.PlaidApi;
 import org.mthree.dto.Item;
 import org.mthree.dto.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import retrofit2.Response;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -34,28 +32,9 @@ public class TransactionService {
                         .accessToken(item.getPlaidAccessToken())
                         .startDate(LocalDate.now().minusMonths(1))
                         .endDate(LocalDate.now());
-                System.out.println("Getting transactions SERVICE");
+
                 TransactionsGetResponse response = plaidApi.transactionsGet(request).execute().body();
 
-                Response<TransactionsGetResponse> plaidResponse = plaidApi.transactionsGet(request).execute();
-
-                if (!plaidResponse.isSuccessful()) {
-                    System.out.println("Plaid response error: " +
-                            (plaidResponse.errorBody() != null ? plaidResponse.errorBody().string() : "No error body"));
-                } else {
-                    System.out.println("Plaid call successful");
-                }
-
-                System.out.println("Plaid response code: " + plaidResponse.code());
-                System.out.println("Plaid response error: " + plaidResponse.errorBody() != null ? plaidResponse.errorBody().string() : "No error body");
-
-                if (response == null) {
-                    System.out.println("Warning: plaidResponse.body() is null for item: " + item.getPlaidItemId());
-                } else if (response.getTransactions() == null) {
-                    System.out.println("Warning: getTransactions() is null for item: " + item.getPlaidItemId());
-                }
-
-                System.out.println("Item: " + item.getPlaidAccessToken());
                 response.getTransactions().forEach(plaidTxn -> {
                     Transaction txn = new Transaction();
                     txn.setName(plaidTxn.getName());
@@ -69,10 +48,10 @@ public class TransactionService {
 
                     allTxns.add(txn);
                 });
-                System.out.println("Got our items");
             } catch (IOException e) {
-                System.out.println("Error fetching transactions for userId " + userId + ": " + e.getMessage());
+                throw new RuntimeException("Error fetching transactions for userId " + userId, e);
             }
+
         }
 
         return allTxns;

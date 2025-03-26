@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @RequestMapping("/transactions")
 @RestController
 public class TransactionController {
@@ -23,6 +24,8 @@ public class TransactionController {
         this.plaidApi = plaidApi;
 
     }
+
+    // Get all transactions by userId
     @GetMapping("")
     public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam String userId) {
         try {
