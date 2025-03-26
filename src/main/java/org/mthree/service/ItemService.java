@@ -4,18 +4,17 @@ import com.plaid.client.model.*;
 import com.plaid.client.request.PlaidApi;
 import org.mthree.dao.ItemDao;
 import org.mthree.dto.Item;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Response;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class ItemService {
 
-    @Autowired
     private final ItemDao itemDao;
     private final PlaidApi plaidApi;
 
@@ -61,10 +60,10 @@ public class ItemService {
 
 
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
-                .user(user)
-                .clientName("FlowTrack")
-                .products(List.of(com.plaid.client.model.Products.AUTH))
-                .countryCodes(List.of(CountryCode.US))
+                .user(new LinkTokenCreateRequestUser().clientUserId("user-id"))
+                .clientName("Your App")
+                .products(Arrays.asList(Products.TRANSACTIONS))
+                .countryCodes(Arrays.asList(CountryCode.US))
                 .language("en");
 
         Response<LinkTokenCreateResponse> response = plaidApi.linkTokenCreate(request).execute();

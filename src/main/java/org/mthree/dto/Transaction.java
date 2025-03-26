@@ -9,7 +9,7 @@ public class Transaction {
     private String category;
     private String type;
     private String name;
-    private BigDecimal amount;
+    private Double amount;
     private LocalDate date;
     private boolean pending;
     private int userId;
@@ -54,11 +54,11 @@ public class Transaction {
         this.name = name;
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
