@@ -40,11 +40,11 @@ public class TransactionService {
                     txn.setName(plaidTxn.getName());
                     txn.setAmount(plaidTxn.getAmount());
                     txn.setDate(plaidTxn.getDate());
+                    txn.setType(plaidTxn.getTransactionType().toString());
                     txn.setCategory(plaidTxn.getCategory() != null && !plaidTxn.getCategory().isEmpty()
                             ? plaidTxn.getCategory().get(0)
                             : "Unknown");
                     txn.setPending(plaidTxn.getPending());
-
 
                     allTxns.add(txn);
                 });

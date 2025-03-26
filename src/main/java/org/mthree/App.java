@@ -12,6 +12,10 @@ public class App{
                 System.setProperty(entry.getKey(), entry.getValue())
         );
 
-        SpringApplication.run(App.class, args);
+        try {
+            SpringApplication.run(App.class, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
