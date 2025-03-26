@@ -13,76 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class ItemService {
-
-    private final ItemDao itemDao;
-    private final PlaidApi plaidApi;
-
-    public ItemService(ItemDao itemDao, PlaidApi plaidApi) {
-        this.itemDao = itemDao;
-        this.plaidApi = plaidApi;
-    }
-
-    public String createSandboxPublicToken() throws IOException {
-        SandboxPublicTokenCreateRequest request = new SandboxPublicTokenCreateRequest()
-                .institutionId("ins_109508")
-                .initialProducts(List.of(Products.AUTH, Products.TRANSACTIONS));
-
-        Response<SandboxPublicTokenCreateResponse> response =
-                plaidApi.sandboxPublicTokenCreate(request).execute();
-
-        if (response.isSuccessful()) {
-            return response.body().getPublicToken();
-        } else {
-            throw new RuntimeException("Failed to create sandbox public token: " + response.errorBody().string());
-        }
-    }
-
-
-    public String exchangePublicToken(String publicToken) throws IOException {
-        ItemPublicTokenExchangeRequest request = new ItemPublicTokenExchangeRequest()
-                .publicToken(publicToken);
-
-        Response<ItemPublicTokenExchangeResponse> response =
-                plaidApi.itemPublicTokenExchange(request).execute();
-
-        if (response.isSuccessful()) {
-            return response.body().getAccessToken();
-        } else {
-            throw new RuntimeException("Failed to exchange public token: " + response.errorBody().string());
-        }
-    }
-
-
-    public String createLinkToken(String userId) throws IOException {
-        LinkTokenCreateRequestUser user = new LinkTokenCreateRequestUser()
-                .clientUserId(userId); // Use a real unique user ID in prod
-
-
-        LinkTokenCreateRequest request = new LinkTokenCreateRequest()
-                .user(new LinkTokenCreateRequestUser().clientUserId("user-id"))
-                .clientName("Your App")
-                .products(Arrays.asList(Products.TRANSACTIONS))
-                .countryCodes(Arrays.asList(CountryCode.US))
-                .language("en");
-
-        Response<LinkTokenCreateResponse> response = plaidApi.linkTokenCreate(request).execute();
-
-        if (response.isSuccessful()) {
-            return response.body().getLinkToken();
-        } else {
-            throw new RuntimeException("Error creating link token: " + response.errorBody().string());
-        }
-    }
-
-    public void addPlaidItem(Item item){
-        System.out.println("In SERVICE ADD PLAID ITEM Adding plaid item: " + item);
-        item.setCreatedAt(LocalDateTime.now());
-        itemDao.addItem(item);
-    }
-
-    public List<Item> getItemsById(String id){
-        System.out.println("SERVICE Getting items");
-        return itemDao.findItemsByUserId(id);
-    }
+public interface ItemService {
+     String createSandboxPublicToken() throws IOException;
+     String exchangePublicToken(String publicToken) throws IOException;
+     String createLinkToken(String userId) throws IOException;
+     void addPlaidItem(Item item);
+     List<Item> getItemsById(String id);
 }
