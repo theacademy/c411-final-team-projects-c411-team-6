@@ -1,38 +1,29 @@
 package org.mthree.service;
 
-
 import com.plaid.client.model.*;
 import com.plaid.client.request.PlaidApi;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
+import org.mthree.dao.ItemDao;
+import org.mthree.dto.Item;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class PlaidService {
+public class ItemService {
 
+    @Autowired
+    private final ItemDao itemDao;
     private final PlaidApi plaidApi;
 
-    @Value("${plaid.client.id}")
-    private String clientId;
-
-    @Value("${plaid.secret}")
-    private String secret;
-
-    private final String baseUrl = "https://sandbox.plaid.com";
-
-    public PlaidService(PlaidApi plaidApi){
+    public ItemService(ItemDao itemDao, PlaidApi plaidApi) {
+        this.itemDao = itemDao;
         this.plaidApi = plaidApi;
     }
+
     public String createSandboxPublicToken() throws IOException {
         SandboxPublicTokenCreateRequest request = new SandboxPublicTokenCreateRequest()
                 .institutionId("ins_109508")
@@ -64,14 +55,15 @@ public class PlaidService {
     }
 
 
-    public String createLinkToken() throws IOException {
+    public String createLinkToken(String userId) throws IOException {
         LinkTokenCreateRequestUser user = new LinkTokenCreateRequestUser()
-                .clientUserId("user-id-123"); // Use a real unique user ID in prod
+                .clientUserId(userId); // Use a real unique user ID in prod
+
 
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
                 .user(user)
                 .clientName("FlowTrack")
-                .products(List.of(com.plaid.client.model.Products.AUTH)) // add other products as needed
+                .products(List.of(com.plaid.client.model.Products.AUTH))
                 .countryCodes(List.of(CountryCode.US))
                 .language("en");
 
@@ -84,4 +76,14 @@ public class PlaidService {
         }
     }
 
+    public void addPlaidItem(Item item){
+        System.out.println("In SERVICE ADD PLAID ITEM Adding plaid item: " + item);
+        item.setCreatedAt(LocalDateTime.now());
+        itemDao.addItem(item);
+    }
+
+    public List<Item> getItemsById(String id){
+        System.out.println("SERVICE Getting items");
+        return itemDao.findItemsByUserId(id);
+    }
 }

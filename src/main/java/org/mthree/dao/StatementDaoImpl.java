@@ -1,5 +1,6 @@
 package org.mthree.dao;
 
+
 import org.mthree.dao.mappers.AssetMapper;
 import org.mthree.dao.mappers.StatementMapper;
 import org.mthree.dto.Statement;
@@ -22,6 +23,7 @@ public class StatementDaoImpl implements StatementDao {
 
     @Override
     public Statement createNewStatement(Statement statement) {
+
         final String INSERT_STATEMENT = "INSERT INTO statements(user_id, month, year, total_income, total_expenses, net_cash_flow) VALUES(?, ?, ?, ?, ?, ?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -39,7 +41,6 @@ public class StatementDaoImpl implements StatementDao {
         }, keyHolder);
 
         statement.setId(keyHolder.getKey().intValue());
-
         return statement;
     }
 
@@ -78,9 +79,9 @@ public class StatementDaoImpl implements StatementDao {
     @Override
     public void deleteStatement(int id) {
 
-
         final String DELETE_STATEMENT = "DELETE FROM statement WHERE id = ?";
         jdbc.update(DELETE_STATEMENT, id);
 
     }
 }
+

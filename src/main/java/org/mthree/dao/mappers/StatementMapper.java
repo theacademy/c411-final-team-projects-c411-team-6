@@ -9,17 +9,15 @@ public class StatementMapper implements RowMapper<Statement> {
 
     @Override
     public Statement mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-        Statement st = new Statement();
-        st.setId(rs.getInt("id"));
-        st.setUserId(rs.getInt("user_id"));
-        st.setMonth(rs.getInt("month"));
-        st.setYear(rs.getInt("year"));
-        st.setTotalIncome(rs.getBigDecimal("total_income"));
-        st.setTotalExpenses(rs.getBigDecimal("total_expenses"));
-        st.setNetCashFlow(rs.getBigDecimal("net_cash_flow"));
-
-        return st;
+        Statement statement = new Statement();
+        statement.setId(rs.getInt("id"));
+        statement.setUser_id(rs.getInt("user_id"));
+        statement.setMonth(rs.getInt("month"));
+        statement.setYear(rs.getInt("year"));
+        statement.setTotal_income(rs.getBigDecimal("total_income"));
+        statement.setTotal_expenses(rs.getBigDecimal("total_expenses"));
+        statement.setNet_cash_flow(rs.getBigDecimal("net_cash_flow"));
+        return statement;
     }
-
 }
+
