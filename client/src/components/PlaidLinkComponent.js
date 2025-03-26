@@ -34,14 +34,14 @@ const PlaidLinkComponent = () => {
     onSuccess: (publicToken, metadata) => {
       console.log("Public Token:", publicToken);  // Log publicToken
       console.log("Metadata:", metadata);  // Log metadata
-
+      const storedUserID = localStorage.getItem("userID");
       // Send the publicToken to your backend to exchange for an access token
       fetch("http://localhost:8080/plaid/exchange-public-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ public_token: publicToken }),
+        body: JSON.stringify({ public_token: publicToken, user_id: storedUserID }),
       })
         .then((response) => response.json())
         .then((data) => {

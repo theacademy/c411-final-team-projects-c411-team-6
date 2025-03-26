@@ -40,36 +40,55 @@ public class ItemController {
     // Exchanges public token to get access token
     @PostMapping("/exchange-public-token")
     public ResponseEntity<Map<String, String>> exchangePublicToken(@RequestBody Map<String, String> requestBody) {
+        System.out.println("Received request: " + requestBody);
+
+        if (!requestBody.containsKey("public_token") || !requestBody.containsKey("user_id")) {
+            System.out.println("Missing public_token or user_id");
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Missing public_token or user_id"));
+        }
+
         String publicToken = requestBody.get("public_token");
-        String accessToken;
+        String userId = requestBody.get("user_id");
+
+        System.out.println("Extracted Public Token: " + publicToken);
+        System.out.println("Extracted User ID: " + userId);
 
         try {
-            accessToken = itemService.exchangePublicToken(publicToken);
+            String accessToken = itemService.exchangePublicToken(publicToken);
 
             ItemGetRequest itemRequest = new ItemGetRequest().accessToken(accessToken);
             ItemGetResponse itemResponse = plaidApi.itemGet(itemRequest).execute().body();
 
+            if (itemResponse == null || itemResponse.getItem() == null) {
+                System.out.println("Failed to retrieve item details from Plaid");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Collections.singletonMap("error", "Failed to retrieve item details"));
+            }
+
             String itemId = itemResponse.getItem().getItemId();
             String institutionId = itemResponse.getItem().getInstitutionId();
+
+            Item item = new Item();
+            item.setUserId(Integer.parseInt(userId));  // Ensure it's stored as an integer
+            item.setPlaidAccessToken(accessToken);
+            item.setPlaidItemId(itemId);
+
+            itemService.addPlaidItem(item);
 
             Map<String, String> response = new HashMap<>();
             response.put("access_token", accessToken);
             response.put("item_id", itemId);
             response.put("institution_id", institutionId);
 
-            Item item = new Item();
-            item.setUserId(1);
-            item.setPlaidAccessToken(accessToken);
-            item.setPlaidItemId(itemId);
-
-            itemService.addPlaidItem(item);
             return ResponseEntity.ok(response);
 
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error exchanging public token: " + e.getMessage());
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Error exchanging public token"));
         }
     }
+
+
 
     //Creates our link token
     @PostMapping("/create-link-token")
