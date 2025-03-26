@@ -4,7 +4,6 @@ import com.plaid.client.model.*;
 import com.plaid.client.request.PlaidApi;
 import org.mthree.dao.ItemDao;
 import org.mthree.dto.Item;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Response;
 
@@ -15,7 +14,6 @@ import java.util.List;
 @Service
 public class ItemService {
 
-    @Autowired
     private final ItemDao itemDao;
     private final PlaidApi plaidApi;
 
