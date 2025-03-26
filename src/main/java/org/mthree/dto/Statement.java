@@ -12,6 +12,17 @@ public class Statement {
     private BigDecimal totalExpenses;
     private BigDecimal netCashFlow;
 
+    public Statement(int id, int userId, int month, BigDecimal totalIncome, BigDecimal totalExpenses) {
+        this.id = id;
+        this.userId = userId;
+        this.month = month;
+        this.totalIncome = totalIncome;
+        this.totalExpenses = totalExpenses;
+        this.netCashFlow = totalIncome.subtract(totalExpenses);
+    }
+
+    public Statement() {}
+
 
     public int getId() {
         return id;

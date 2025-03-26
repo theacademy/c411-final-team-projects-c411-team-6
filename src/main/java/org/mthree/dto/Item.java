@@ -4,21 +4,29 @@ package org.mthree.dto;
 import java.time.LocalDateTime;
 
 public class Item {
-    private Long id;
-    private Long userId;
+    private int id;
+    private int userId;
     private String plaidAccessToken;
     private String plaidItemId;
     private LocalDateTime createdAt;
 
-    public Long getId() { return id; }
+    public Item() {}
 
-    public void setId(Long id) { this.id = id; }
+    public Item(String plaidAccessToken, String plaidItemId, LocalDateTime now) {
+        this.plaidAccessToken = plaidAccessToken;
+        this.plaidItemId = plaidItemId;
+        this.createdAt = now;
+    }
 
-    public Long getUserId() {
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
+
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

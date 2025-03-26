@@ -8,6 +8,14 @@ public class Asset {
     private BigDecimal value;
     private String description;
 
+    public Asset(){}
+
+    public Asset(int i, int i1, String description, BigDecimal value) {
+        this.id = i;
+        this.userId = i1;
+        this.value = value;
+        this.description = description;
+    }
 
     public int getId() {
         return id;

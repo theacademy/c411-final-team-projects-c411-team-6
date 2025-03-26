@@ -63,7 +63,7 @@ public class ItemController {
 
 
             Item item = new Item();
-            item.setUserId(1L);
+            item.setUserId(1);
             item.setPlaidAccessToken(accessToken);
             item.setPlaidItemId(itemId);
 
