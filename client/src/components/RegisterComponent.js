@@ -1,61 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Register = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const RegisterComponent = ({ setUserID }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    const userData = { username, password };
-
-    try {
-      // Send a POST request to register the user
-      const response = await fetch("http://localhost:8080/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
+  const handleRegister = () => {
+    fetch("http://localhost:8080/users/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    })
+      .then((response) => response.json())
+      .then((createdUser) => {
+        if (createdUser && createdUser.id) {
+          setUserID(createdUser.id); // Extract the userID from the createdUser object
+          console.log("User ID created:", createdUser.id); // Log the userID to verify
+          navigate("/link-account");
+        } else {
+          console.error("User ID not found in response");
+        }
+      })
+      .catch((error) => {
+        console.error("Error during registration:", error);
       });
-
-      if (response.ok) {
-        // If registration is successful, redirect to the Plaid link page
-        navigate("/link-account");
-      } else {
-
-        console.error("Registration failed");
-      }
-    } catch (error) {
-      console.error("Error occurred during registration", error);
-    }
   };
+
 
   return (
     <div>
       <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Register</button>
-      </form>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleRegister}>Register</button>
+      {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 };
 
-export default Register;
+export default RegisterComponent;

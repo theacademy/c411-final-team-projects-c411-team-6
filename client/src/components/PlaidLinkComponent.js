@@ -4,11 +4,9 @@ import { usePlaidLink } from "react-plaid-link";
 const PlaidLinkComponent = ({ userID }) => {
   const [linkToken, setLinkToken] = useState(null);
 
-
+  console.log("Received userID in PlaidLinkComponent:", userID);
   // Fetch link token from backend
   useEffect(() => {
-      console.log("Received userID in PlaidLinkComponent:", userID); // Log the userID
-
       if (!userID) return; // If no userID, exit early
 
       // Fetch link token from backend
@@ -57,17 +55,15 @@ const PlaidLinkComponent = ({ userID }) => {
   console.log("Ready to open Plaid Link:", ready);
 
   return (
-    <>
+    <div>
       <h2>Connect to Your Account</h2>
       <p>Here, you'll be able to link your bank account through Plaid.</p>
-      <button onClick={() => {
-        console.log("Opening Plaid Link");
-        open();
-      }} disabled={!ready}>
+      <button onClick={() => open()} disabled={!ready}>
         Connect Bank Account
       </button>
-    </>
+    </div>
   );
+
 
 };
 

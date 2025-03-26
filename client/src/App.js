@@ -13,11 +13,12 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login setUserID={setUserID} />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register setUserID={setUserID} />} />
         <Route path="/link-account" element={<PlaidLink userID={userID} />} />
       </Routes>
     </Router>
   );
+
 };
 
 export default App;
