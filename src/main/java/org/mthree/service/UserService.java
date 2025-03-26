@@ -1,55 +1,20 @@
 package org.mthree.service;
 
-import org.mthree.dao.UserDao;
 import org.mthree.dto.User;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final UserDao userDao;
+    List<User> getAllUsers();
 
-    public UserService(JdbcTemplate jdbcTemplate, UserDao userDao) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.userDao = userDao;
-    }
+    User getUserById(int id);
 
+    User addNewUser(User user);
 
-    public User createUser(String username, String password) {
-        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
-        int userId = userDao.saveUser(username, password);  // Save user and password
-        return new User(userId, username, password, currentTime, currentTime);  // Return user with generated userId
-    }
+    User updateUserData(int id, User user);
 
-    public User checkUserCredentials(String username, String password) {
-        User user = userDao.getUserByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
-            return user; // Return user if username and password match
-        }
-        return null;
-    }
+    void deleteUserById(int id);
 
-    public List<User> getAllUsers() {
-        return userDao.getAllUsers();
-    }
-
-    public User getUserById(int id) {
-        return userDao.getUserById(id);
-    }
-
-    public int deleteUserById(int id) {
-        return userDao.deleteUserById(id);
-    }
-
-    public User getUserByUsername(String username) {
-        return userDao.getUserByUsername(username);
-    }
 }
 

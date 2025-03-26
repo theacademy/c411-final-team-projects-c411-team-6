@@ -20,3 +20,4 @@ public class StatementMapper implements RowMapper<Statement> {
         return statement;
     }
 }
+

@@ -1,7 +1,20 @@
 package org.mthree.service;
 
-import org.springframework.stereotype.Service;
+import org.mthree.dto.Statement;
 
-@Service
-public class StatementService {
+
+import java.util.List;
+
+public interface StatementService {
+
+    List<Statement> getAllStatements();
+
+    Statement getStatementById(int id);
+
+    Statement addNewStatement(Statement statement);
+
+    Statement updateStatementData(int id, Statement statement);
+
+    void deleteStatementById(int id);
+
 }

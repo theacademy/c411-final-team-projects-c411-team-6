@@ -17,5 +17,4 @@ public interface AssetDao {
     void deleteAsset(int id);
 
 
-
 }

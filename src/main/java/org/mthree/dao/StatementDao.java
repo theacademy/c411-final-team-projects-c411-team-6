@@ -1,6 +1,9 @@
 package org.mthree.dao;
 
 import org.mthree.dto.Statement;
+
+import javax.swing.undo.StateEdit;
+
 import java.util.List;
 
 public interface StatementDao {
@@ -14,4 +17,6 @@ public interface StatementDao {
     void updateStatement(Statement statement);
 
     void deleteStatement(int id);
+
 }
+
