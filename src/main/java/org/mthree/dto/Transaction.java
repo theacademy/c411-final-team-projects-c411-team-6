@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class Transaction {
 
-    private int id;
+    private String id;
     private String category;
     private String type;
     private String name;
@@ -22,11 +22,11 @@ public class Transaction {
         this.userId = userId;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

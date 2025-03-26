@@ -14,6 +14,6 @@ import java.util.List;
 
 
 public interface TransactionService {
-    public List<Transaction> getTransactions(Long userId);
-
+    void addTransaction(Transaction txn);
+    List<Transaction> getTransactions(Long userId);
 }

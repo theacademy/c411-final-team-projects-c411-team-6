@@ -11,11 +11,11 @@ public class App{
         dotenv.entries().forEach(entry ->
                 System.setProperty(entry.getKey(), entry.getValue())
         );
-
-        try {
-            SpringApplication.run(App.class, args);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SpringApplication.run(App.class, args);
+//        try {
+//            SpringApplication.run(App.class, args);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }
