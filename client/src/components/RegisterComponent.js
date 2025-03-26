@@ -1,67 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { usePlaidLink } from "react-plaid-link";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const PlaidLinkComponent = () => {
-  const [linkToken, setLinkToken] = useState(null);
+const Register = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-  // Fetch link token from backend using dynamic userID
-  useEffect(() => {
-    const storedUserID = localStorage.getItem("userID");  // Retrieve from localStorage
+  const handleRegister = async (e) => {
+    e.preventDefault();
 
-    if (storedUserID) {
-      console.log("User ID from localStorage:", storedUserID); // Log userID
+    // Clear previous error/success messages
+    setError('');
+    setSuccessMessage('');
 
-      fetch(`http://localhost:8080/plaid/create-link-token?userId=${storedUserID}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: storedUserID }),
-      })
-        .then((res) => res.text())
-        .then((token) => {
-          console.log("Received link token:", token);  // Log the token received
-          setLinkToken(token);
-        })
-        .catch((err) => console.error("Failed to fetch:", err));
-    } else {
-      console.log("No userID found in localStorage.");
-    }
-  }, []);
+    try {
+      // Send POST request to the server to register the user
+      const response = await axios.post('http://localhost:8080/users/register', {
+        username,
+        password,
+      });
 
-  const { open, ready } = usePlaidLink({
-    token: linkToken,
-    onSuccess: (publicToken, metadata) => {
-      console.log("Public Token:", publicToken);  // Log publicToken
-      console.log("Metadata:", metadata);  // Log metadata
-
-      // Send the publicToken to your backend to exchange for an access token
-      fetch("http://localhost:8080/plaid/exchange-public-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ public_token: publicToken }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Access Token Response:", data);  // Log access token response
-        })
-        .catch((error) => console.error("Error:", error));
-    },
-    onExit: (error, metadata) => {
-      console.log("User exited:", metadata);
-      if (error) {
-        console.error("Error:", error);
+      // Handle success response
+      if (response.status === 200) {
+        setSuccessMessage('Registration successful! You can now log in.');
       }
-    },
-  });
+    } catch (err) {
+      // Handle error response
+      if (err.response && err.response.data) {
+        setError(err.response.data.error || 'An error occurred during registration.');
+      } else {
+        setError('An unexpected error occurred.');
+      }
+    }
+  };
 
   return (
-    <button onClick={() => open()} disabled={!ready}>
-      Connect Bank Account
-    </button>
+    <div>
+      <h2>Register</h2>
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <form onSubmit={handleRegister}>
+        <div>
+          <label>Username</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <button type="submit">Register</button>
+      </form>
+    </div>
   );
 };
 
-export default PlaidLinkComponent;
+export default Register;
