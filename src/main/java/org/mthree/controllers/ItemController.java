@@ -5,7 +5,6 @@ import com.plaid.client.model.ItemGetResponse;
 import com.plaid.client.request.PlaidApi;
 import org.mthree.dto.Item;
 import org.mthree.service.ItemService;
-import org.mthree.service.PlaidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +18,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/plaid")
-public class PlaidController {
+public class ItemController {
 
-    @Autowired
-    private PlaidService plaidService;
     @Autowired
     private PlaidApi plaidApi;
     @Autowired
@@ -31,7 +28,7 @@ public class PlaidController {
     @PostMapping("/create-public-token")
     public ResponseEntity<String> createPublicToken() {
         try {
-            String publicToken = plaidService.createSandboxPublicToken();
+            String publicToken = itemService.createSandboxPublicToken();
             return ResponseEntity.ok(publicToken);
         }catch (Exception e){
             return ResponseEntity
@@ -46,7 +43,7 @@ public class PlaidController {
         String accessToken;
 
         try {
-            accessToken = plaidService.exchangePublicToken(publicToken);
+            accessToken = itemService.exchangePublicToken(publicToken);
 
             ItemGetRequest itemRequest = new ItemGetRequest().accessToken(accessToken);
             ItemGetResponse itemResponse = plaidApi.itemGet(itemRequest).execute().body();
@@ -85,7 +82,7 @@ public class PlaidController {
     public ResponseEntity<String> createLinkToken(@RequestParam String userId) {
         String linkToken;
         try{
-            linkToken = plaidService.createLinkToken(userId);
+            linkToken = itemService.createLinkToken(userId);
             return ResponseEntity.ok(linkToken);
         } catch(IOException e){
             return ResponseEntity
