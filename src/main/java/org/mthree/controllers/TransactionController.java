@@ -2,7 +2,6 @@ package org.mthree.controllers;
 
 import com.plaid.client.model.TransactionsGetRequest;
 import com.plaid.client.request.PlaidApi;
-import org.mthree.dto.Item;
 import org.mthree.dto.Transaction;
 import org.mthree.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class TransactionController {
             System.out.println("Returning transactions");
             return ResponseEntity.ok(items);
         } catch (Exception e) {
-            e.printStackTrace(); // 👈 this will print the real cause
+            e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
     }

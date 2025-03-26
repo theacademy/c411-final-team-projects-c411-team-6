@@ -99,7 +99,7 @@ public class ItemController {
             List<Item> items = itemService.getItemsById(userId);
             return ResponseEntity.ok(items);
         } catch (Exception e) {
-            e.printStackTrace(); // 👈 this will print the real cause
+            e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
     }
