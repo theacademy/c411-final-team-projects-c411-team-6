@@ -4,12 +4,13 @@ import org.mthree.dao.UserDao;
 import org.mthree.dto.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Repository
+@Service
 public class UserService {
 
     private final JdbcTemplate jdbcTemplate;
