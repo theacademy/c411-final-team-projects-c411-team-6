@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService{
             user.setUsername("IDs do not match, user not updated");
             return user;
         }
-        User existing = userDao.findUserById(id);
+        User existing = userDao.getUserById(id);
         if (existing == null) {
             user.setUsername("User not found, update failed");
             return user;
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUserById(int id) {
-        User user = userDao.findUserById(id);
+        User user = userDao.getUserById(id);
         if (user != null) {
             userDao.deleteUser(id);
             System.out.println("User ID: " + id + " deleted");
