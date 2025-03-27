@@ -63,42 +63,42 @@ const Home = () => {
 
             {/* Main Content Section */}
             <div className="w-full max-w-[1440px] relative mt-[50px]">
-                {/* Hero Section */}
-                <section className="w-full h-[672px] relative">
+                <section className="w-full h-[600px] relative">
                     <div className="absolute w-full h-full bg-accent-default opacity-[0.06]" />
 
                     <div className="relative h-full flex items-center">
-                        <div className="w-full max-w-[1110px] mx-auto flex justify-between">
-                            <div className="max-w-[445px] ml-[165px]">
-                                <h1 className="font-h3-bold-32-40-0-1px text-light-black py-8 sm:py-10 md:py-12 lg:py-16 text-xl sm:text-2xl md:text-3xl lg:text-4xl">
+                        <div className="w-full max-w-[1110px] mx-auto flex flex-col lg:flex-row items-center justify-between px-4 lg:px-8 gap-8">
+
+                            {/* Left Side Text */}
+                            <div className="flex-1 flex flex-col justify-center">
+                                <h1 className="font-h3-bold-32-40-0-1px text-light-black mb-6 text-xl sm:text-2xl md:text-3xl lg:text-4xl">
                                     Take Control of Your Business Finances
                                 </h1>
 
-                                <p className="font-body-1-regular-16-22-0-3px text-muted-foreground mb-12">
+                                <p className="font-body-1-regular-16-22-0-3px text-muted-foreground mb-8">
                                     FlowTrack is an intuitive financial management tool designed
                                     for small businesses to effortlessly track transactions,
                                     generate insightful financial statements, and forecast future
                                     business performance. With comprehensive features that offer a
                                     clear overview of your business health, FlowTrack ensures
-                                    you&apos;re always equipped to make informed financial
-                                    decisions.
+                                    you're always equipped to make informed financial decisions.
                                 </p>
-
 
                                 {/* Register Button */}
                                 <Button
-                                    className="w-[158px] h-[42px] rounded-[25px]  #F3F6FA text-accent-foreground"
+                                    className="w-[158px] h-[42px] rounded-[25px] text-white"
                                     onClick={handleRegisterClick}
                                 >
-                                    <span className="font-button-bold-14-18-0-3px text-white">
-                                      Create Account
-                                    </span>
-                                </Button>
+                            <span className="font-button-bold-14-18-0-3px">
+                              Create Account
+                            </span>
+                                                </Button>
                             </div>
 
-                            <div className="mr-[165px] hidden lg:block">
+                            {/* Right Side Image */}
+                            <div className="flex-1 flex justify-center lg:justify-end">
                                 <img
-                                    className="w-[570px] h-[388px]"
+                                    className="w-full max-w-[600px] h-auto"
                                     alt="Desktop"
                                     src="https://c.animaapp.com/NlTnxe1m/img/desktop.svg"
                                 />
@@ -106,12 +106,12 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
             </div>
+
             {/* Features Section */}
             <div>
-                <section className="w-full mt-[120px] bg-white">
-                    <div className="text-center mb-16 px-4 sm:px-8">
+                <section className="w-full min-h-screen mt-[120px] bg-white">
+                <div className="text-center mb-16 px-4 sm:px-8">
                         <h2 className="font-h3-bold-32-40-0-1px text-light-black py-8 sm:py-10 md:py-12 lg:py-16 text-xl sm:text-2xl md:text-3xl lg:text-4xl">
                             We offer a complete
                             <br />
