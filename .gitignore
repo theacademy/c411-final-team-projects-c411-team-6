@@ -39,3 +39,6 @@ build/
 
 #Secrets, env vars
 .env
+
+#Logging
+application.log

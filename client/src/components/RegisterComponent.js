@@ -22,7 +22,7 @@ const Register = () => {
       });
 
       // Handle success response
-      if (response.status === 200) {
+      if (response.status === 201) {
         setSuccessMessage('Registration successful! You can now log in.');
       }
     } catch (err) {
