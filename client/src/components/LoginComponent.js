@@ -52,7 +52,7 @@ const Login = () => {
         {/* Header Section */}
         <LandingHeader onLoginClick={handleLoginClick} bgColor="bg-white" />
         {/* Heading */}
-        <div className="w-full bg-muted">
+        <div className="w-full ">
           <section className="w-full mt-[120px]">
             <div className="text-center mb-4 px-4 sm:px-8">
               <h2 className="font-h3-bold-32-40-0-1px text-light-black  text-xl sm:text-2xl md:text-3xl lg:text-4xl">
@@ -61,7 +61,7 @@ const Login = () => {
             </div>
           </section>
 
-          <section className="w-full bg-muted">
+          <section className="w-full">
             <div className="text-center mb-16 px-4 sm:px-8">
               <form onSubmit={handleLogin}>
                 <div className={"mb-2"}>
