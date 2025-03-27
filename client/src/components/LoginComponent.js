@@ -13,6 +13,7 @@ const Login = () => {
     e.preventDefault();
     const userData = { username, password };
 
+    console.log(username + " " + password);
     try {
       // Send POST request to login the user
       const response = await fetch("http://localhost:8080/users/login", {
@@ -86,12 +87,13 @@ const Login = () => {
 
                 <Button
                       className="w-[170px] h-[42px] rounded-[25px] text-white"
-                      onClick={handleLogin}
-                  >
+                      type="submit"
+                >
                     <span className="font-button-bold-14-18-0-3px">Log In</span>
                   </Button>
 
                   <Button
+                      type="button"
                       className="w-[170px] h-[42px] rounded-[25px] text-white"
                       onClick={handleRegisterClick}
                   >
@@ -107,11 +109,9 @@ const Login = () => {
           </section>
         </div>
 
-
         <div>
 
         </div>
-
 
       </div>
   );
