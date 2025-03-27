@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
@@ -22,11 +22,16 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/link-account" element={<PlaidLinkComponent setUser={setUser} />} />
         <Route
-          path="/transactions"
-          element={user?.plaidAccessToken ? <TransactionsComponent /> : <Navigate to="/link-account" />}
-        />
+                  path="/transactions"
+                  element={
+                    user?.plaidAccessToken ? (
+                      <TransactionsComponent setUser={setUser} />
+                    ) : (
+                      <PlaidLinkComponent setUser={setUser} />
+                    )
+                  }
+                />
       </Routes>
     </Router>
   );

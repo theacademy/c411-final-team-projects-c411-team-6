@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import PlaidLinkComponent from "./PlaidLinkComponent";
 
 const TransactionsComponent = () => {
   const [transactions, setTransactions] = useState([]);
@@ -9,23 +9,22 @@ const TransactionsComponent = () => {
   const [endDate, setEndDate] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
-
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
+
+  // Effect to get the stored user data
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser && storedUser.plaidAccessToken) {
       setUser(storedUser);
-    } else {
-      navigate("/link-account");
     }
-  }, [navigate]);
+  }, []);
 
   const fetchTransactions = useCallback(async () => {
     if (!user || !user.id) return;
     setLoading(true);
     try {
+      console.log("Fetching transactions for user:", user.id);
       const res = await fetch(`http://localhost:8080/transactions?userId=${user.id}`);
       const data = await res.json();
       setTransactions(data);
@@ -85,51 +84,56 @@ const TransactionsComponent = () => {
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
 
-      {/* Filters */}
-      <div className="flex gap-4 mb-4">
-        {/* Date Filter */}
-        <div>
-          <label className="block font-medium">Start Date:</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="border px-2 py-1"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">End Date:</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border px-2 py-1"
-          />
-        </div>
-        <button
-          onClick={filterTransactions}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Filter by Date
-        </button>
+      {/* Always show the PlaidLinkComponent button */}
+      <PlaidLinkComponent setUser={setUser} />
 
-        {/* Category Filter */}
-        <div>
-          <label className="block font-medium">Category:</label>
-          <select
-            value={selectedCategory}
-            onChange={(e) => filterByCategory(e.target.value)}
-            className="border px-2 py-1"
+      {/* Filters */}
+      {user?.plaidAccessToken && (
+        <div className="flex gap-4 mb-4">
+          {/* Date Filter */}
+          <div>
+            <label className="block font-medium">Start Date:</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border px-2 py-1"
+            />
+          </div>
+          <div>
+            <label className="block font-medium">End Date:</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="border px-2 py-1"
+            />
+          </div>
+          <button
+            onClick={filterTransactions}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            <option value="">All</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+            Filter by Date
+          </button>
+
+          {/* Category Filter */}
+          <div>
+            <label className="block font-medium">Category:</label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => filterByCategory(e.target.value)}
+              className="border px-2 py-1"
+            >
+              <option value="">All</option>
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Transactions Table */}
       {loading ? (
