@@ -10,6 +10,7 @@ const TransactionsComponent = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [user, setUser] = useState(null);
+  const [accounts, setAccounts] = useState([]);  // State to store bank accounts
 
 
   // Effect to get the stored user data
@@ -20,11 +21,11 @@ const TransactionsComponent = () => {
     }
   }, []);
 
+  // Fetch Transactions
   const fetchTransactions = useCallback(async () => {
     if (!user || !user.id) return;
     setLoading(true);
     try {
-      console.log("Fetching transactions for user:", user.id);
       const res = await fetch(`http://localhost:8080/transactions?userId=${user.id}`);
       const data = await res.json();
       setTransactions(data);
@@ -37,11 +38,25 @@ const TransactionsComponent = () => {
     }
   }, [user]);
 
+  // Fetch Accounts
+  const fetchAccounts = useCallback(async () => {
+    if (!user || !user.id) return;
+    try {
+      const res = await fetch(`http://localhost:8080/plaid/accounts/${user.id}`);
+      const data = await res.json();
+      setAccounts(data);  // Store accounts in state
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+    }
+  }, [user]);
+
+  // Fetch Data When User Changes
   useEffect(() => {
     if (user) {
       fetchTransactions();
+      fetchAccounts();
     }
-  }, [user, fetchTransactions]);
+  }, [user, fetchTransactions, fetchAccounts]);
 
   const extractCategories = (transactions) => {
     const uniqueCategories = new Set();
@@ -86,6 +101,39 @@ const TransactionsComponent = () => {
 
       {/* Always show the PlaidLinkComponent button */}
       <PlaidLinkComponent setUser={setUser} />
+
+      {/* Accounts Table */}
+      {accounts.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-xl font-semibold mb-4">Your Bank Accounts</h3>
+          <table className="min-w-full bg-white border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4 border">Account Name</th>
+                <th className="py-2 px-4 border">Account Type</th>
+                <th className="py-2 px-4 border">Subtype</th>
+                <th className="py-2 px-4 border">Available Balance</th>
+                <th className="py-2 px-4 border">Current Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {accounts.map((account, index) => (
+                <tr key={index} className="text-center">
+                  <td className="py-2 px-4 border">{account.name}</td>
+                  <td className="py-2 px-4 border">{account.type}</td>
+                  <td className="py-2 px-4 border">{account.subtype}</td>
+                  <td className="py-2 px-4 border">
+                    ${account.balances.available ? account.balances.available.toFixed(2) : "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border">
+                    ${account.balances.current ? account.balances.current.toFixed(2) : "N/A"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Filters */}
       {user?.plaidAccessToken && (
