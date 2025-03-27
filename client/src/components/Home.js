@@ -41,7 +41,7 @@ const Home = () => {
     return (
         <div className="bg-muted flex flex-col justify-center w-full">
             {/* Header Section */}
-            <LandingHeader></LandingHeader>
+            <LandingHeader onLoginClick={handleLoginClick} bgColor = "bg-muted" />
 
             {/* Main Content Section */}
             <div className="w-full max-w-[1440px] relative mt-[50px]">
