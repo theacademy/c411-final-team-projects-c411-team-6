@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { LifeBuoyIcon, ShoppingCartIcon, TagIcon } from "lucide-react";
+import LandingHeader from "./ui/LandingHeader";
 
 // Feature cards data
 const featureCards = [
@@ -40,26 +41,7 @@ const Home = () => {
     return (
         <div className="bg-muted flex flex-col justify-center w-full">
             {/* Header Section */}
-            <header className="w-full h-[88px] bg-accent-default">
-                <div className="relative h-full flex items-center justify-between px-8">
-                    {/* Logo */}
-                    <div className="w-[70px] h-8 flex items-center">
-                        <div className="[font-family:'Lato',Helvetica] font-bold  #F3F6FA text-2xl tracking-[0.20px] leading-8">
-                            FlowTrack
-                        </div>
-                    </div>
-
-                    {/* Login Button */}
-                    <Button
-                        className="w-[83px] h-[42px] rounded-[25px]  #F3F6FA text-accent-foreground"
-                        onClick={handleLoginClick}
-                    >
-                        <span className="font-button-bold-14-18-0-3px text-white">
-                          Log In
-                        </span>
-                    </Button>
-                </div>
-            </header>
+            <LandingHeader></LandingHeader>
 
             {/* Main Content Section */}
             <div className="w-full max-w-[1440px] relative mt-[50px]">
