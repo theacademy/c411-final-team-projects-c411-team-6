@@ -5,8 +5,6 @@ import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
 import PlaidLinkComponent from "./components/PlaidLinkComponent";
 import TransactionsComponent from "./components/TransactionsComponent";
-import Nav from "./components/Nav";
-
 const App = () => {
   const [user, setUser] = useState(null);
 
@@ -17,18 +15,8 @@ const App = () => {
     }
   }, []);
 
-  const customNavItems = ["Home", "Services", "About Us", "Contact"];
-  const customLogoText = "My Custom Logo";
-  const customLoginText = "Sign In";
-
   return (
       <Router>
-        {/* Render Nav component here so it's always visible on top of pages */}
-        <Nav
-            navItems={customNavItems}
-            logoText={customLogoText}
-            loginText={customLoginText}
-        />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
