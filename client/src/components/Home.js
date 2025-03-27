@@ -75,7 +75,7 @@ const Home = () => {
                                 </h1>
 
                                 <p className="font-body-1-regular-16-22-0-3px text-muted-foreground mb-12">
-                                    Flowtrack is an intuitive financial management tool designed
+                                    FlowTrack is an intuitive financial management tool designed
                                     for small businesses to effortlessly track transactions,
                                     generate insightful financial statements, and forecast future
                                     business performance. With comprehensive features that offer a
@@ -106,7 +106,10 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-                {/* Features Section */}
+
+            </div>
+            {/* Features Section */}
+            <div>
                 <section className="w-full mt-[120px] bg-white">
                     <div className="text-center mb-16 px-4 sm:px-8">
                         <h2 className="font-h3-bold-32-40-0-1px text-light-black py-8 sm:py-10 md:py-12 lg:py-16 text-xl sm:text-2xl md:text-3xl lg:text-4xl">
@@ -136,7 +139,28 @@ const Home = () => {
                     </div>
 
                 </section>
+            </div>
 
+            {/* Get Started */}
+            <div>
+                <section className="w-full mt-[120px] ">
+                    <div className="text-center mb-16 px-4 sm:px-8">
+                        <h2 className="font-h3-bold-32-40-0-1px text-light-black text-xl sm:text-2xl md:text-3xl lg:text-4xl">
+                            Ready to get started?
+                        </h2>
+                        <p className="font-body-2-regular-14-20-0-2px text-light-black text-center sm:py-2 md:py-4 lg:py-6 "> Take control of your Business finances.</p>
+                        {/* Register Button */}
+                        <Button
+                            className="w-[158px] h-[42px] rounded-[25px]  #F3F6FA text-accent-foreground"
+                            onClick={handleRegisterClick}
+                        >
+                                    <span className="font-button-bold-14-18-0-3px text-white">
+                                      Get Started
+                                    </span>
+                        </Button>
+                    </div>
+
+                </section>
             </div>
         </div>
     );
