@@ -1,5 +1,7 @@
 package org.mthree.controllers;
 
+import com.plaid.client.model.CategoriesGetResponse;
+import com.plaid.client.model.Category;
 import com.plaid.client.model.TransactionsGetRequest;
 import com.plaid.client.request.PlaidApi;
 import org.mthree.dto.Transaction;
@@ -7,6 +9,7 @@ import org.mthree.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.Response;
 
 import java.time.LocalDate;
 import java.util.List;
