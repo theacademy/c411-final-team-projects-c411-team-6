@@ -24,9 +24,17 @@ public class ItemService {
     }
 
     public String createSandboxPublicToken() throws IOException {
+
+        SandboxPublicTokenCreateRequestOptions options = new SandboxPublicTokenCreateRequestOptions()
+                .overrideUsername("custom_1")
+                .overridePassword("custom_1");
+
         SandboxPublicTokenCreateRequest request = new SandboxPublicTokenCreateRequest()
                 .institutionId("ins_109508")
                 .initialProducts(List.of(Products.AUTH, Products.TRANSACTIONS));
+
+        request.setOptions(options);
+
 
         Response<SandboxPublicTokenCreateResponse> response =
                 plaidApi.sandboxPublicTokenCreate(request).execute();
@@ -60,7 +68,7 @@ public class ItemService {
 
 
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
-                .user(new LinkTokenCreateRequestUser().clientUserId("user-id"))
+                .user(new LinkTokenCreateRequestUser().clientUserId("user_id"))
                 .clientName("Your App")
                 .products(Arrays.asList(Products.TRANSACTIONS))
                 .countryCodes(Arrays.asList(CountryCode.US))
