@@ -12,11 +12,25 @@ const TransactionsComponent = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [accounts, setAccounts] = useState([]);
+  const [username, setUsername] = useState("");
 
   console.log("USER ID: " + localStorage.getItem("userID"));
+  const userId = localStorage.getItem("userID");
+
+  const fetchUsername = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const res = await fetch(`http://localhost:8080/users/${userId}`);
+      if (!res.ok) throw new Error("Failed to fetch user data");
+      const user = await res.json();
+      setUsername(user.username);  // Parse the username from the response
+    } catch (error) {
+      console.error("Error fetching username:", error);
+    }
+  }, [userId]);
+
   // Fetch Transactions for Logged-in User
   const fetchTransactions = useCallback(async () => {
-    const userId = localStorage.getItem("userID");
     if (!userId) return;
     setLoading(true);
     try {
@@ -31,11 +45,10 @@ const TransactionsComponent = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [userId]);
 
   // Fetch Accounts for Logged-in User
   const fetchAccounts = useCallback(async () => {
-    const userId = localStorage.getItem("userID");
     if (!userId) return;
     try {
       const res = await fetch(`http://localhost:8080/plaid/accounts/${userId}`);
@@ -46,14 +59,14 @@ const TransactionsComponent = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  }, []);
+  }, [userId]);
 
   // Fetch Transactions and Accounts on User Login
   useEffect(() => {
+      fetchUsername();
       fetchTransactions();
       fetchAccounts();
-
-  }, [fetchTransactions, fetchAccounts]);
+  }, [fetchUsername, fetchTransactions, fetchAccounts]);
 
   // Extract Unique Categories from Transactions
   const extractCategories = (transactions) => {
@@ -103,7 +116,7 @@ const TransactionsComponent = () => {
   return (
     <div className="container mx-auto p-6">
       <Navi></Navi>
-      <h2 className="text-2xl font-bold mb-4">Transactions</h2>
+      <h2 className="text-2xl font-bold mb-4">Welcome, {username}! </h2>
       {/*<LogoutComponent  />*/}
       {/* Always show the PlaidLinkComponent */}
       <div className="p-3">
