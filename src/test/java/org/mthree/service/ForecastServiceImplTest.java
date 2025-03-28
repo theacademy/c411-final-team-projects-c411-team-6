@@ -60,6 +60,6 @@ class ForecastServiceImplTest {
         assertNotNull(result);
 
     }
-    
+
 
 }
