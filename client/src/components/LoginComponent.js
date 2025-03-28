@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -25,6 +25,8 @@ const Login = () => {
         // In Login Component after successful login:
         const data = await response.json();
         localStorage.setItem("userID", data.id);
+        localStorage.setItem('user', JSON.stringify(data)); // Store full user data
+        setUser(data);
         navigate("/transactions");
       } else {
         const error = await response.text();

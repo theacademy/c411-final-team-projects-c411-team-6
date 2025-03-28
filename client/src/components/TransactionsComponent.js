@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PlaidLinkComponent from "./PlaidLinkComponent";
+import LogoutComponent from "./LogoutComponent";
 
 const TransactionsComponent = () => {
   const [transactions, setTransactions] = useState([]);
@@ -16,6 +17,7 @@ const TransactionsComponent = () => {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
+      console.log("Stored User:", storedUser);
       setUser(storedUser);
     }
   }, []);
@@ -38,7 +40,7 @@ const TransactionsComponent = () => {
     }
   }, [user]);
 
-  // Fetch Accounts (Optional: Only if user has a Plaid account)
+  // Fetch Accounts for Logged-in User
   const fetchAccounts = useCallback(async () => {
     if (!user || !user.id) return;
     try {
@@ -51,7 +53,7 @@ const TransactionsComponent = () => {
     }
   }, [user]);
 
-  // Fetch Transactions on User Login (Even If No Plaid Account)
+  // Fetch Transactions and Accounts on User Login
   useEffect(() => {
     if (user) {
       fetchTransactions();
@@ -59,7 +61,7 @@ const TransactionsComponent = () => {
     }
   }, [user, fetchTransactions, fetchAccounts]);
 
-  // Extract Unique Categories
+  // Extract Unique Categories from Transactions
   const extractCategories = (transactions) => {
     const uniqueCategories = new Set();
     transactions.forEach((txn) => {
@@ -100,9 +102,10 @@ const TransactionsComponent = () => {
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
-
+      <LogoutComponent setUser={setUser} />
       {/* Always show the PlaidLinkComponent */}
       <PlaidLinkComponent setUser={setUser} />
+
 
       {/* Display Accounts If Any */}
       {accounts.length > 0 && (
