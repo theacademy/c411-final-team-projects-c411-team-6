@@ -4,7 +4,7 @@ import Navi from "./ui/Navi";
 import StatementSummary from "./ui/StatementSummary";
 
 const StatementComponent = () => {
-    const [setTransactions] = useState([]);
+    const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
