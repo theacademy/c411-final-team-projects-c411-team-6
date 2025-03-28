@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Transaction {
     private String plaidTransactionId;
-    private int id;
+    private Long id;
     private String category;
     private String type;
     private String name;
@@ -21,11 +21,11 @@ public class Transaction {
         this.accountOwner = accountOwner;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

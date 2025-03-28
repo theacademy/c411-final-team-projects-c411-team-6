@@ -131,7 +131,7 @@ public class TransactionService {
                     txn.setName(plaidTxn.getName());
                     txn.setAmount(plaidTxn.getAmount());
                     txn.setDate(plaidTxn.getDate());
-                    txn.setUserId(userId);
+                    txn.setId(userId);
                     txn.setType(plaidTxn.getTransactionType().toString());
                     txn.setCategory(plaidTxn.getCategory() != null && !plaidTxn.getCategory().isEmpty()
                             ? plaidTxn.getCategory().get(0)

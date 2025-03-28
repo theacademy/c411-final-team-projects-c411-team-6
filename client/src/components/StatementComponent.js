@@ -228,18 +228,6 @@ const StatementComponent = () => {
                     />
                 )}
 
-                {/* Historical Statements */}
-                <div className="mt-12">
-                    <h3 className="text-xl font-semibold mb-4 text-light-black">Historical Statements</h3>
-                    <ul className="bg-white p-6 rounded-xl shadow-md space-y-4">
-                        {historicalStatements.map((stmt) => (
-                            <li key={stmt.id} className="flex justify-between font-body-2-regular-14-20-0-2px text-light-black">
-                                <span>{`${months[stmt.month - 1]} ${stmt.year}`}</span>
-                                <span>Net Cash Flow: ${stmt.netCashFlow.toFixed(2)}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
                 {/* Download Button */}
                 <div className="mt-8">
                     {filteredTransactions.length > 0 && (
