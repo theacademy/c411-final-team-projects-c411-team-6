@@ -10,24 +10,16 @@ const TransactionsComponent = () => {
   const [endDate, setEndDate] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user] = useState(null);
   const [accounts, setAccounts] = useState([]);
-
-  // Load stored user data on mount
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      console.log("Stored User:", storedUser);
-      setUser(storedUser);
-    }
-  }, []);
 
   // Fetch Transactions for Logged-in User
   const fetchTransactions = useCallback(async () => {
-    if (!user || !user.id) return;
+    const userId = localStorage.getItem("userID");
+    if (!userId) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8080/transactions?userId=${user.id}`);
+      const res = await fetch(`http://localhost:8080/transactions?userId=${userId}`);
       if (!res.ok) throw new Error("Failed to fetch transactions");
       const data = await res.json();
       setTransactions(data);
@@ -38,28 +30,28 @@ const TransactionsComponent = () => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, []);
 
   // Fetch Accounts for Logged-in User
   const fetchAccounts = useCallback(async () => {
-    if (!user || !user.id) return;
+    const userId = localStorage.getItem("userID");
+    if (!userId) return;
     try {
-      const res = await fetch(`http://localhost:8080/plaid/accounts/${user.id}`);
+      const res = await fetch(`http://localhost:8080/plaid/accounts/${userId}`);
       if (!res.ok) throw new Error("Failed to fetch accounts");
       const data = await res.json();
       setAccounts(data);
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  }, [user]);
+  }, []);
 
   // Fetch Transactions and Accounts on User Login
   useEffect(() => {
-    if (user) {
       fetchTransactions();
       fetchAccounts();
-    }
-  }, [user, fetchTransactions, fetchAccounts]);
+
+  }, [fetchTransactions, fetchAccounts]);
 
   // Extract Unique Categories from Transactions
   const extractCategories = (transactions) => {
@@ -72,12 +64,13 @@ const TransactionsComponent = () => {
 
   // Filter Transactions by Date
   const filterTransactions = async () => {
+    const userId = localStorage.getItem("userID");
     if (!startDate || !endDate) return;
     setLoading(true);
     try {
       const categoryParam = selectedCategory ? `&category=${selectedCategory}` : "";
       const res = await fetch(
-        `http://localhost:8080/transactions/by-date?userId=${user.id}&startDate=${startDate}&endDate=${endDate}${categoryParam}`
+        `http://localhost:8080/transactions/by-date?userId=${userId}&startDate=${startDate}&endDate=${endDate}${categoryParam}`
       );
       if (!res.ok) throw new Error("Failed to filter transactions");
       const data = await res.json();
@@ -102,9 +95,9 @@ const TransactionsComponent = () => {
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
-      <LogoutComponent setUser={setUser} />
+      <LogoutComponent  />
       {/* Always show the PlaidLinkComponent */}
-      <PlaidLinkComponent setUser={setUser} />
+      <PlaidLinkComponent  />
 
 
       {/* Display Accounts If Any */}

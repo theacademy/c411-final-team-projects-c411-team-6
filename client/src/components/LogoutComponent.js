@@ -7,10 +7,8 @@ const LogoutComponent = () => {
   const handleLogout = () => {
     // Remove userID from localStorage
     localStorage.removeItem("userID");
-    localStorage.removeItem("user"); // Optional: Remove other user data if stored
 
-    // Redirect to login page after logout
-    navigate("/"); // Use navigate() instead of history.push()
+    navigate("/");
   };
 
   return (
