@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PlaidLinkComponent from "./PlaidLinkComponent";
 import LogoutComponent from "./LogoutComponent";
+import Navi from "./ui/Navi";
 
 const TransactionsComponent = () => {
   const [transactions, setTransactions] = useState([]);
@@ -13,6 +14,7 @@ const TransactionsComponent = () => {
   const [user] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
+  console.log("USER ID: " + localStorage.getItem("userID"));
   // Fetch Transactions for Logged-in User
   const fetchTransactions = useCallback(async () => {
     const userId = localStorage.getItem("userID");
@@ -41,6 +43,7 @@ const TransactionsComponent = () => {
       if (!res.ok) throw new Error("Failed to fetch accounts");
       const data = await res.json();
       setAccounts(data);
+      console.log("Account size: " + accounts.length);
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
@@ -92,12 +95,20 @@ const TransactionsComponent = () => {
     }
   };
 
+  const refreshData = () => {
+    fetchTransactions();
+    fetchAccounts();
+  };
+
+
   return (
     <div className="container mx-auto p-6">
+      <Navi></Navi>
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
-      <LogoutComponent  />
+      {/*<LogoutComponent  />*/}
       {/* Always show the PlaidLinkComponent */}
-      <PlaidLinkComponent  />
+      <PlaidLinkComponent onSuccessCallback={refreshData} />
+
 
 
       {/* Display Accounts If Any */}
