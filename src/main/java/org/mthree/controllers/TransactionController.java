@@ -1,35 +1,33 @@
 package org.mthree.controllers;
 
-import com.plaid.client.model.CategoriesGetResponse;
-import com.plaid.client.model.Category;
 import com.plaid.client.model.TransactionsGetRequest;
 import com.plaid.client.request.PlaidApi;
 import org.mthree.dto.Transaction;
+import org.mthree.service.ForecastService;
 import org.mthree.service.TransactionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.Response;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 
 @RequestMapping("/transactions")
 @RestController
 public class TransactionController {
     private final TransactionService transactionService;
+    private final ForecastService forecastService;
     private final PlaidApi plaidApi;
 
-    public TransactionController(TransactionService transactionService, PlaidApi plaidApi) {
+    public TransactionController(TransactionService transactionService, ForecastService forecastService, PlaidApi plaidApi) {
         this.transactionService = transactionService;
+        this.forecastService = forecastService;
         this.plaidApi = plaidApi;
-
     }
 
     // Get all transactions by userId
     @GetMapping("")
-    public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam Long userId) {
+    public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam String userId) {
         try {
             List<Transaction> items = transactionService.getTransactions(userId);
             return ResponseEntity.ok(items);
@@ -42,7 +40,7 @@ public class TransactionController {
     // Get all transactions by date
     @GetMapping("/by-date")
     public ResponseEntity<List<Transaction>> getTransactionsByDateRange(
-            @RequestParam Long userId,
+            @RequestParam String userId,
             @RequestParam String startDate,
             @RequestParam String endDate) {
         try {
@@ -51,7 +49,7 @@ public class TransactionController {
             LocalDate end = LocalDate.parse(endDate);
 
             List<Transaction> filtered = all.stream()
-                    .filter(txn -> !txn.getDate().isBefore(start) && !txn.getDate().isAfter(end))
+                    .filter(transaction -> !transaction.getDate().isBefore(start) && !transaction.getDate().isAfter(end))
                     .toList();
 
             return ResponseEntity.ok(filtered);
@@ -64,12 +62,12 @@ public class TransactionController {
     // Get all transactions by category
     @GetMapping("/by-category")
     public ResponseEntity<List<Transaction>> getTransactionsByCategory(
-            @RequestParam Long userId,
+            @RequestParam String userId,
             @RequestParam String category) {
         try {
             List<Transaction> all = transactionService.getTransactions(userId);
             List<Transaction> filtered = all.stream()
-                    .filter(txn -> txn.getCategory().equalsIgnoreCase(category))
+                    .filter(transaction -> transaction.getCategory().equalsIgnoreCase(category))
                     .toList();
             return ResponseEntity.ok(filtered);
         } catch (Exception e) {
@@ -99,6 +97,20 @@ public class TransactionController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Internal error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/forecast")
+    public ResponseEntity<Map<String, Double>> getSpendingForecast(
+            @RequestParam String userId,
+            @RequestParam(defaultValue = "6") int historicalMonths,
+            @RequestParam(defaultValue = "3") int forecastMonths) {
+        try {
+            Map<String, Double> forecast = forecastService.forecastSpending(userId, historicalMonths, forecastMonths);
+            return ResponseEntity.ok(forecast);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
         }
     }
 
