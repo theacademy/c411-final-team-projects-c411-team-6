@@ -50,6 +50,7 @@ const PlaidLinkComponent = ({ setUser }) => {
         const updatedUser = { id: storedUserID, plaidAccessToken: data.access_token };
         localStorage.setItem("user", JSON.stringify(updatedUser));
         setUser(updatedUser);
+        console.log("Setting in PlaidLinkComponent.js" + localStorage.getItem("user"));
 
         // Redirect to transactions page
         navigate("/transactions");

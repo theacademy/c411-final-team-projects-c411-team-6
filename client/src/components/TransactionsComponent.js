@@ -25,7 +25,7 @@ const TransactionsComponent = () => {
     if (!user || !user.id) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8080/transactions?userId=${user.id}`);
+      const res = await fetch(`http://localhost:8080/transactions?userId=${localStorage.getItem("userId")}`);
       if (!res.ok) throw new Error("Failed to fetch transactions");
       const data = await res.json();
       setTransactions(data);
@@ -42,7 +42,7 @@ const TransactionsComponent = () => {
   const fetchAccounts = useCallback(async () => {
     if (!user || !user.id) return;
     try {
-      const res = await fetch(`http://localhost:8080/plaid/accounts/${user.id}`);
+      const res = await fetch(`http://localhost:8080/plaid/accounts/${localStorage.getItem("userId")}`);
       if (!res.ok) throw new Error("Failed to fetch accounts");
       const data = await res.json();
       setAccounts(data);
@@ -75,7 +75,7 @@ const TransactionsComponent = () => {
     try {
       const categoryParam = selectedCategory ? `&category=${selectedCategory}` : "";
       const res = await fetch(
-        `http://localhost:8080/transactions/by-date?userId=${user.id}&startDate=${startDate}&endDate=${endDate}${categoryParam}`
+        `http://localhost:8080/transactions/by-date?userId=${localStorage.getItem("userId")}&startDate=${startDate}&endDate=${endDate}${categoryParam}`
       );
       if (!res.ok) throw new Error("Failed to filter transactions");
       const data = await res.json();

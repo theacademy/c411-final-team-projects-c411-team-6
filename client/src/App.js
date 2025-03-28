@@ -13,6 +13,7 @@ const App = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
       setUser(storedUser);
+      console.log("Setting in App.js" + localStorage.getItem("user"));
     }
   }, []);
 

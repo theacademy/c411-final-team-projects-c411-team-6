@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  console.log("Before User Id: " + localStorage.getItem("userID"));
+  useEffect(() => {
+    localStorage.removeItem("userID");
+  }, []);
+
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,7 +30,9 @@ const Login = () => {
         // If login is successful, redirect to Plaid link page
         // In Login Component after successful login:
         const data = await response.json();
-        localStorage.setItem("userID", data.id);
+        localStorage.setItem("userId", data.id);
+
+        console.log("After User Id: " + localStorage.getItem("userId"));
         navigate("/transactions");
       } else {
         const error = await response.text();
