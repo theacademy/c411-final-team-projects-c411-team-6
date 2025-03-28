@@ -44,9 +44,9 @@ const Home = () => {
             <LandingHeader onLoginClick={handleLoginClick} bgColor = "bg-muted" />
 
             {/* Main Content Section */}
-            <div className="w-full max-w-[1440px] relative mt-[50px]">
+            <div className="w-full relative mt-[50px]">
                 <section className="w-full h-[600px] relative">
-                    <div className="absolute w-full h-full bg-accent-default opacity-[0.06]" />
+                    <div className="absolute w-full h-full bg-muted opacity-[0.06]" />
 
                     <div className="relative h-full flex items-center">
                         <div className="w-full max-w-[1110px] bg-muted mx-auto flex flex-col lg:flex-row items-center justify-between px-4 lg:px-8 gap-8">

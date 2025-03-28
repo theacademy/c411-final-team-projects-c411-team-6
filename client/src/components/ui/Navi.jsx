@@ -6,7 +6,7 @@ const Navi = () => {
         <header className="w-full h-[88px] bg-white">
             <div className="relative h-full flex items-center justify-between px-8">
                 {/* Logo Section */}
-                <Link to="/statements" className="w-[70px] h-8 flex items-center">
+                <Link to="/transactions" className="w-[70px] h-8 flex items-center">
                     <div className="[font-family:'Lato',Helvetica] font-bold text-2xl tracking-[0.20px] leading-8">
                         FlowTrack
                     </div>
