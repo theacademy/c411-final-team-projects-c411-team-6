@@ -4,18 +4,18 @@ import { Card } from "./card";
 const StatementSummary = ({ revenueBreakdown, expenseBreakdown, totalRevenue, totalExpenses, netCashFlow }) => {
     return (
         <div className="bg-muted min-h-screen">
-            {/* Title */}
-            <div className="max-w-[1110px] mx-auto px-4 py-10 text-center">
-                <h2 className="font-h3-bold-32-40-0-1px text-light-black text-2xl sm:text-3xl md:text-4xl">
-                    Financial Statement Summary
-                </h2>
-                <p className="font-body-2-regular-14-20-0-2px text-muted-foreground mt-2">
-                    Here's a detailed breakdown of your business finances for this period.
-                </p>
-            </div>
+            {/*/!* Title *!/*/}
+            {/*<div className="max-w-[1110px] mx-auto px-4 py-10 text-center">*/}
+            {/*    <h2 className="font-h3-bold-32-40-0-1px text-light-black text-2xl sm:text-3xl md:text-4xl">*/}
+            {/*        Financial Statement Summary*/}
+            {/*    </h2>*/}
+            {/*    <p className="font-body-2-regular-14-20-0-2px text-muted-foreground mt-2">*/}
+            {/*        Here's a detailed breakdown of your business finances for this period.*/}
+            {/*    </p>*/}
+            {/*</div>*/}
 
             {/* Financial Overview Cards */}
-            <div className="max-w-[1110px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+            <div className="max-w-[1110px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-8 py-8">
                 <Card className="p-6 bg-white text-center rounded-xl shadow-md">
                     <h3 className="font-h6-bold-18-24-0-1px text-light-black mb-2">Total Revenue</h3>
                     <p className="text-2xl font-bold text-green-600">${totalRevenue.toFixed(2)}</p>

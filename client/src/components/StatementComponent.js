@@ -39,21 +39,25 @@ const StatementComponent = () => {
 
     const fetchTransactions = useCallback(async () => {
         if (!userId) return;
+        if (!selectedMonth || !selectedYear) {
+            setMessage("Please select both a month and a year.");
+            return;
+        }
         try {
             const res = await fetch(`http://localhost:8080/transactions?userId=${userId}`);
             const data = await res.json();
+            const filtered = applyDateFilter(data, selectedMonth, selectedYear);
             setTransactions(data);
-            setFilteredTransactions(applyDateFilter(data, selectedMonth, selectedYear));
+            setFilteredTransactions(filtered);
+            if (filtered.length === 0) {
+                setMessage("No information available for the selected month.");
+            } else {
+                setMessage("");
+            }
         } catch (err) {
             console.error("Failed to fetch transactions:", err);
         }
     }, [userId, selectedMonth, selectedYear]);
-
-    useEffect(() => {
-        if (userId) {
-            fetchTransactions();
-        }
-    }, [userId, fetchTransactions]);
 
     const fetchHistoricalStatements = useCallback(async () => {
         try {
@@ -100,12 +104,11 @@ const StatementComponent = () => {
     return (
         <div className="container mx-auto p-6">
             <Navi />
-            <h2 className="text-2xl font-bold mb-4">Statements</h2>
+            <h2 className="text-2xl font-bold mb-4">Financial Statements</h2>
 
             {/* Month/Year Filter */}
             <div className="flex gap-4 mb-6">
                 <div>
-                    <label>Month:</label>
                     <select
                         value={selectedMonth}
                         onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
@@ -116,7 +119,6 @@ const StatementComponent = () => {
                     </select>
                 </div>
                 <div>
-                    <label>Year:</label>
                     <input
                         type="number"
                         value={selectedYear}
@@ -125,18 +127,26 @@ const StatementComponent = () => {
                         max="2099"
                     />
                 </div>
+                <button
+                    onClick={fetchTransactions}
+                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                    Generate Statement
+                </button>
             </div>
 
             {message && <p className="text-sm text-blue-600 mb-4">{message}</p>}
 
             {/* Statement Summary */}
-            <StatementSummary
-                revenueBreakdown={revenueBreakdown}
-                expenseBreakdown={expenseBreakdown}
-                totalRevenue={totalRevenue}
-                totalExpenses={totalExpenses}
-                netCashFlow={netCashFlow}
-            />
+            {filteredTransactions.length > 0 && (
+                <StatementSummary
+                    revenueBreakdown={revenueBreakdown}
+                    expenseBreakdown={expenseBreakdown}
+                    totalRevenue={totalRevenue}
+                    totalExpenses={totalExpenses}
+                    netCashFlow={netCashFlow}
+                />
+            )}
 
             {/* Historical Statements */}
             <div className="mt-12">
