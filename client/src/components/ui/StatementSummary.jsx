@@ -3,6 +3,7 @@ import { Card } from "./card";
 
 const StatementSummary = ({ revenueBreakdown, expenseBreakdown, totalRevenue, totalExpenses, netCashFlow }) => {
     return (
+
         <div className="bg-muted min-h-screen">
             {/*/!* Title *!/*/}
             {/*<div className="max-w-[1110px] mx-auto px-4 py-10 text-center">*/}

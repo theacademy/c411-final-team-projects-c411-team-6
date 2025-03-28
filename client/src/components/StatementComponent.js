@@ -102,63 +102,67 @@ const StatementComponent = () => {
     const netCashFlow = totalRevenue - totalExpenses;
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="bg-muted w-full min-h-screen">
             <Navi />
-            <h2 className="text-2xl font-bold mb-4">Financial Statements</h2>
+            <div className="max-w-6xl mx-auto px-6 py-8">
+                <h2 className="text-3xl font-bold mb-6 text-light-black">Financial Statements</h2>
 
-            {/* Month/Year Filter */}
-            <div className="flex gap-4 mb-6">
-                <div>
-                    <select
-                        value={selectedMonth}
-                        onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                {/* Month/Year Filter */}
+                <div className="flex gap-4 mb-6 items-center">
+                    <div>
+                        <select
+                            value={selectedMonth}
+                            onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                            className="border px-2 py-1 rounded"
+                        >
+                            {months.map((month, index) => (
+                                <option key={index} value={index + 1}>{month}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <input
+                            type="number"
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                            min="2000"
+                            max="2099"
+                            className="border px-2 py-1 rounded"
+                        />
+                    </div>
+                    <button
+                        onClick={fetchTransactions}
+                        className="bg-blue-600 text-white px-4 py-2 rounded"
                     >
-                        {months.map((month, index) => (
-                            <option key={index} value={index + 1}>{month}</option>
-                        ))}
-                    </select>
+                        Generate Statement
+                    </button>
                 </div>
-                <div>
-                    <input
-                        type="number"
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                        min="2000"
-                        max="2099"
+
+                {message && <p className="text-sm text-blue-600 mb-4">{message}</p>}
+
+                {/* Statement Summary */}
+                {filteredTransactions.length > 0 && (
+                    <StatementSummary
+                        revenueBreakdown={revenueBreakdown}
+                        expenseBreakdown={expenseBreakdown}
+                        totalRevenue={totalRevenue}
+                        totalExpenses={totalExpenses}
+                        netCashFlow={netCashFlow}
                     />
+                )}
+
+                {/* Historical Statements */}
+                <div className="mt-12">
+                    <h3 className="text-xl font-semibold mb-4 text-light-black">Historical Statements</h3>
+                    <ul className="bg-white p-6 rounded-xl shadow-md space-y-4">
+                        {historicalStatements.map((stmt) => (
+                            <li key={stmt.id} className="flex justify-between font-body-2-regular-14-20-0-2px text-light-black">
+                                <span>{`${months[stmt.month - 1]} ${stmt.year}`}</span>
+                                <span>Net Cash Flow: ${stmt.netCashFlow.toFixed(2)}</span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-                <button
-                    onClick={fetchTransactions}
-                    className="bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                    Generate Statement
-                </button>
-            </div>
-
-            {message && <p className="text-sm text-blue-600 mb-4">{message}</p>}
-
-            {/* Statement Summary */}
-            {filteredTransactions.length > 0 && (
-                <StatementSummary
-                    revenueBreakdown={revenueBreakdown}
-                    expenseBreakdown={expenseBreakdown}
-                    totalRevenue={totalRevenue}
-                    totalExpenses={totalExpenses}
-                    netCashFlow={netCashFlow}
-                />
-            )}
-
-            {/* Historical Statements */}
-            <div className="mt-12">
-                <h3 className="text-xl font-semibold mb-4 text-light-black">Historical Statements</h3>
-                <ul className="bg-white p-6 rounded-xl shadow-md space-y-4">
-                    {historicalStatements.map((stmt) => (
-                        <li key={stmt.id} className="flex justify-between font-body-2-regular-14-20-0-2px text-light-black">
-                            <span>{`${months[stmt.month - 1]} ${stmt.year}`}</span>
-                            <span>Net Cash Flow: ${stmt.netCashFlow.toFixed(2)}</span>
-                        </li>
-                    ))}
-                </ul>
             </div>
         </div>
     );
