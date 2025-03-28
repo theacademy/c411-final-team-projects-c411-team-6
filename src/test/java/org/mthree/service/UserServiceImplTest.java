@@ -5,16 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.Null;
 import org.mthree.dao.UserDao;
 import org.mthree.dto.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 class UserServiceImplTest {
 
@@ -31,6 +34,50 @@ class UserServiceImplTest {
         MockitoAnnotations.openMocks(this);
         sampleUser = new User(1, "john_doe", "password123", "2023-03-26T12:30:00", "2023-03-26T12:30:00");
     }
+
+
+    @Test
+    void testGetUserByUsername() {
+        // Arrange
+        when(userDao.getUserByUsername("john_doe")).thenReturn(sampleUser);
+
+        // Act
+        User result = userService.getUserByUsername("john_doe");
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("john_doe", result.getUsername());
+        verify(userDao, times(1)).getUserByUsername("john_doe");
+    }
+
+
+    @Test
+    void testGetAllUsers_Empty() {
+        // Arrange
+        when(userDao.getAllUsers()).thenReturn(null);
+
+        // Act
+        List<User> result = userService.getAllUsers();
+
+        // Assert
+        assertNull(result);
+        verify(userDao, times(1)).getAllUsers();
+    }
+
+    @Test
+    void testGetAllUsers_Success() {
+        // Arrange
+        when(userDao.getAllUsers()).thenReturn(List.of(sampleUser));
+
+        // Act
+        List<User> result = userService.getAllUsers();
+
+        // Assert
+        assertNotNull(result);
+        assertNotEquals("jane_doe", result.get(0).getUsername());
+        verify(userDao, times(1)).getAllUsers();
+    }
+
 
     @Test
     void testGetUserById_Success() {
