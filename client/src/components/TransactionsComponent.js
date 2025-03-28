@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import Navi from "./ui/Navi";
 
 const TransactionsComponent = () => {
   const [transactions, setTransactions] = useState([]);
@@ -83,6 +84,7 @@ const TransactionsComponent = () => {
 
   return (
     <div className="container mx-auto p-6">
+      <Navi></Navi>
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
 
       {/* Filters */}
