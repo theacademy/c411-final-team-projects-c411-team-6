@@ -65,7 +65,7 @@ const PlaidLinkComponent = ({ setUser }) => {
 
   return (
     <button onClick={() => open()} disabled={!ready}>
-      Connect Bank Account
+      Connect a Bank Account
     </button>
   );
 };
