@@ -131,9 +131,9 @@ const StatementComponent = () => {
             ["", "Marketing", "$1000"],
             ["", "Total Expenses", "$4500"], // Summed up
             // Row 4: Gains
-            ["Gains", "Gain from Asset Sale", "$500"],
+            ["Gains", "Gain from Asset Sale", ""],
             // Row 5: Losses
-            ["Losses", "Loss from Investment", "$200"],
+            ["Losses", "Loss from Investment", ""],
             // Row 6: Net Income
             ["Net Income", "Net Income", `$${netCashFlow.toFixed(2)}`]
         ];
