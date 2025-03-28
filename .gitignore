@@ -40,5 +40,6 @@ build/
 #Secrets, env vars
 .env
 
-#Logging
-application.log
+# Ignore rotated logs
+**/application.log
+**/application.log*

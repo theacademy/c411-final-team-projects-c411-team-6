@@ -29,7 +29,7 @@ const Login = () => {
         // In Login Component after successful login:
         const data = await response.json();
         localStorage.setItem("userID", data.id);
-        navigate("/link-account");
+        navigate("/transactions");
       } else {
         const error = await response.text();
         alert(error);
