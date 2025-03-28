@@ -143,7 +143,7 @@ const TransactionsComponent = () => {
       )}
 
       {/* Filters */}
-      {user && (
+      {(
         <div className="flex gap-4 mb-4">
           <div>
             <label className="block font-medium">Start Date:</label>
