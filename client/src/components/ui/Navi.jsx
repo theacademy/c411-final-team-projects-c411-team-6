@@ -18,7 +18,7 @@ const Navi = () => {
                         <ul className="flex space-x-16">
                             <li>
                                 <Link
-                                    to="/"
+                                    to="/transactions"
                                     className="font-button-bold-14-18-0-3px text-light-white py-2 px-4 rounded-md hover:bg-accent-light"
                                 >
                                     Transactions

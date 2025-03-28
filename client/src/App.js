@@ -5,6 +5,7 @@ import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
 import PlaidLinkComponent from "./components/PlaidLinkComponent";
 import TransactionsComponent from "./components/TransactionsComponent";
+import StatementComponent from "./components/StatementComponent";
 const App = () => {
   const [user, setUser] = useState(null);
 
@@ -26,6 +27,7 @@ const App = () => {
               path="/transactions"
               element={user?.plaidAccessToken ? <TransactionsComponent /> : <Navigate to="/link-account" />}
           />
+          <Route path="/statements" element={<StatementComponent}/>
         </Routes>
       </Router>
   );

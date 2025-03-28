@@ -130,7 +130,7 @@ const Home = () => {
                         <h2 className="font-h3-bold-32-40-0-1px text-light-black text-xl sm:text-2xl md:text-3xl lg:text-4xl">
                             Ready to get started?
                         </h2>
-                        <p className="font-body-2-regular-14-20-0-2px text-light-black text-center sm:py-2 md:py-4 lg:py-6 "> Take control of your Business finances.</p>
+                        <p className="font-body-2-regular-14-20-0-2px text-light-black text-center sm:py-2 md:py-4 lg:py-6 "> </p>
                         {/* Register Button */}
                         <Button
                             className="w-[158px] h-[42px] rounded-[25px]  #F3F6FA text-accent-foreground"
