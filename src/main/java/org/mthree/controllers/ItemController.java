@@ -7,6 +7,7 @@ import com.plaid.client.model.ItemGetResponse;
 import com.plaid.client.request.PlaidApi;
 import org.mthree.dto.Item;
 import org.mthree.service.ItemService;
+import org.mthree.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,8 @@ public class ItemController {
     private PlaidApi plaidApi;
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private TransactionService transactionService;
 
     //Creates public token
     @PostMapping("/create-public-token")
@@ -37,7 +40,6 @@ public class ItemController {
         }
     }
 
-    // Exchanges public token to get access token
     @PostMapping("/exchange-public-token")
     public ResponseEntity<Map<String, String>> exchangePublicToken(@RequestBody Map<String, String> requestBody) {
         System.out.println("Received request: " + requestBody);
@@ -69,11 +71,12 @@ public class ItemController {
             String institutionId = itemResponse.getItem().getInstitutionId();
 
             Item item = new Item();
-            item.setUserId(Integer.parseInt(userId));  // Ensure it's stored as an integer
+            item.setUserId(Integer.parseInt(userId));
             item.setPlaidAccessToken(accessToken);
             item.setPlaidItemId(itemId);
 
             itemService.addPlaidItem(item);
+            transactionService.getTransactions(userId, 6);
 
             Map<String, String> response = new HashMap<>();
             response.put("access_token", accessToken);
@@ -88,16 +91,17 @@ public class ItemController {
         }
     }
 
-
-
-    //Creates our link token
     @PostMapping("/create-link-token")
-    public ResponseEntity<String> createLinkToken(@RequestParam String userId) {
+    public ResponseEntity<String> createLinkToken(@RequestBody Map<String, String> body) {
+        String userId = body.get("userId");
+        if (userId == null) {
+            return ResponseEntity.badRequest().body("Missing userId in request body");
+        }
         String linkToken;
-        try{
+        try {
             linkToken = itemService.createLinkToken(userId);
             return ResponseEntity.ok(linkToken);
-        } catch(IOException e){
+        } catch (IOException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", e.getMessage()).toString());

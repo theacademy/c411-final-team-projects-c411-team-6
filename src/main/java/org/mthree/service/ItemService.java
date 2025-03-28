@@ -53,14 +53,12 @@ public class ItemService {
         }
     }
 
-
     public String createLinkToken(String userId) throws IOException {
         LinkTokenCreateRequestUser user = new LinkTokenCreateRequestUser()
-                .clientUserId(userId); // Use a real unique user ID in prod
-
+                .clientUserId(userId);
 
         LinkTokenCreateRequest request = new LinkTokenCreateRequest()
-                .user(new LinkTokenCreateRequestUser().clientUserId("user-id"))
+                .user(user)
                 .clientName("Your App")
                 .products(Arrays.asList(Products.TRANSACTIONS))
                 .countryCodes(Arrays.asList(CountryCode.US))

@@ -1,10 +1,9 @@
 package org.mthree.dto;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Transaction {
-
+    private String plaidTransactionId;
     private int id;
     private String category;
     private String type;
@@ -12,14 +11,14 @@ public class Transaction {
     private Double amount;
     private LocalDate date;
     private boolean pending;
-    private Long userId;
+    private String accountOwner;
 
-    public Long getUserId() {
-        return userId;
+    public String getAccountOwner() {
+        return accountOwner;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAccountOwner(String accountOwner) {
+        this.accountOwner = accountOwner;
     }
 
     public int getId() {
@@ -28,6 +27,14 @@ public class Transaction {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPlaidTransactionId() {
+        return plaidTransactionId;
+    }
+
+    public void setPlaidTransactionId(String plaidTransactionId) {
+        this.plaidTransactionId = plaidTransactionId;
     }
 
     public String getCategory() {
