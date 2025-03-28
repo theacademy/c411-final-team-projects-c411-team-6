@@ -10,23 +10,23 @@ const TransactionsComponent = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [user, setUser] = useState(null);
-  const [accounts, setAccounts] = useState([]);  // State to store bank accounts
+  const [accounts, setAccounts] = useState([]);
 
-
-  // Effect to get the stored user data
+  // Load stored user data on mount
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser && storedUser.plaidAccessToken) {
+    if (storedUser) {
       setUser(storedUser);
     }
   }, []);
 
-  // Fetch Transactions
+  // Fetch Transactions for Logged-in User
   const fetchTransactions = useCallback(async () => {
     if (!user || !user.id) return;
     setLoading(true);
     try {
       const res = await fetch(`http://localhost:8080/transactions?userId=${user.id}`);
+      if (!res.ok) throw new Error("Failed to fetch transactions");
       const data = await res.json();
       setTransactions(data);
       setFilteredTransactions(data);
@@ -38,19 +38,20 @@ const TransactionsComponent = () => {
     }
   }, [user]);
 
-  // Fetch Accounts
+  // Fetch Accounts (Optional: Only if user has a Plaid account)
   const fetchAccounts = useCallback(async () => {
     if (!user || !user.id) return;
     try {
       const res = await fetch(`http://localhost:8080/plaid/accounts/${user.id}`);
+      if (!res.ok) throw new Error("Failed to fetch accounts");
       const data = await res.json();
-      setAccounts(data);  // Store accounts in state
+      setAccounts(data);
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
   }, [user]);
 
-  // Fetch Data When User Changes
+  // Fetch Transactions on User Login (Even If No Plaid Account)
   useEffect(() => {
     if (user) {
       fetchTransactions();
@@ -58,40 +59,41 @@ const TransactionsComponent = () => {
     }
   }, [user, fetchTransactions, fetchAccounts]);
 
+  // Extract Unique Categories
   const extractCategories = (transactions) => {
     const uniqueCategories = new Set();
     transactions.forEach((txn) => {
-      if (txn.category) {
-        uniqueCategories.add(txn.category);
-      }
+      if (txn.category) uniqueCategories.add(txn.category);
     });
     setCategories([...uniqueCategories]);
   };
 
+  // Filter Transactions by Date
   const filterTransactions = async () => {
-    if (!startDate || !endDate) return; // Date filters are required
+    if (!startDate || !endDate) return;
     setLoading(true);
     try {
-      const categoryParam = selectedCategory ? `&category=${selectedCategory}` : '';
+      const categoryParam = selectedCategory ? `&category=${selectedCategory}` : "";
       const res = await fetch(
         `http://localhost:8080/transactions/by-date?userId=${user.id}&startDate=${startDate}&endDate=${endDate}${categoryParam}`
       );
+      if (!res.ok) throw new Error("Failed to filter transactions");
       const data = await res.json();
       setFilteredTransactions(data);
     } catch (error) {
-      console.error("Error fetching transactions by date:", error);
+      console.error("Error filtering transactions:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Filter Transactions by Category
   const filterByCategory = (category) => {
     setSelectedCategory(category);
     if (!category) {
       setFilteredTransactions(transactions);
     } else {
-      const filtered = transactions.filter((txn) => txn.category === category);
-      setFilteredTransactions(filtered);
+      setFilteredTransactions(transactions.filter((txn) => txn.category === category));
     }
   };
 
@@ -99,10 +101,10 @@ const TransactionsComponent = () => {
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
 
-      {/* Always show the PlaidLinkComponent button */}
+      {/* Always show the PlaidLinkComponent */}
       <PlaidLinkComponent setUser={setUser} />
 
-      {/* Accounts Table */}
+      {/* Display Accounts If Any */}
       {accounts.length > 0 && (
         <div className="mt-6">
           <h3 className="text-xl font-semibold mb-4">Your Bank Accounts</h3>
@@ -123,10 +125,10 @@ const TransactionsComponent = () => {
                   <td className="py-2 px-4 border">{account.type}</td>
                   <td className="py-2 px-4 border">{account.subtype}</td>
                   <td className="py-2 px-4 border">
-                    ${account.balances.available ? account.balances.available.toFixed(2) : "N/A"}
+                    ${account.balances.available?.toFixed(2) || "N/A"}
                   </td>
                   <td className="py-2 px-4 border">
-                    ${account.balances.current ? account.balances.current.toFixed(2) : "N/A"}
+                    ${account.balances.current?.toFixed(2) || "N/A"}
                   </td>
                 </tr>
               ))}
@@ -136,9 +138,8 @@ const TransactionsComponent = () => {
       )}
 
       {/* Filters */}
-      {user?.plaidAccessToken && (
+      {user && (
         <div className="flex gap-4 mb-4">
-          {/* Date Filter */}
           <div>
             <label className="block font-medium">Start Date:</label>
             <input
@@ -157,10 +158,7 @@ const TransactionsComponent = () => {
               className="border px-2 py-1"
             />
           </div>
-          <button
-            onClick={filterTransactions}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
+          <button onClick={filterTransactions} className="bg-blue-500 text-white px-4 py-2 rounded">
             Filter by Date
           </button>
 
