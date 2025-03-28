@@ -77,7 +77,7 @@ const Register = () => {
 
                 <div className="mb-2">
                   <Input
-                      type="text"
+                      type="password"
                       value={password}
                       placeholder={"Password"}
                       onChange={(e) => setPassword(e.target.value)}
