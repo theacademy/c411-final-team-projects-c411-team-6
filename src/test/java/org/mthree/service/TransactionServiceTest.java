@@ -54,7 +54,7 @@ class TransactionServiceTest {
 
         sampleTransaction = new Transaction();
         sampleTransaction.setPlaidTransactionId("plaidTransactionId");
-        sampleTransaction.setId(1);
+        sampleTransaction.setId((long)1);
         sampleTransaction.setCategory("Food");
         sampleTransaction.setType("Place");
         sampleTransaction.setName("KFC");
