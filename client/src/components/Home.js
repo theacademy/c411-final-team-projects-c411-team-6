@@ -11,19 +11,19 @@ const featureCards = [
         icon: <ShoppingCartIcon className="w-10 h-10" />,
         title: "Transaction Tracking",
         description:
-            "Eos tota dicunt democritum no. Has natum gubergren ne. Est viris soleat sadipscing cu. Legere epicuri insolens eu nec, dicit virtute urbanitas id nam, qui in habeo semper eligendi.",
+            "Transaction tracking involves recording and monitoring every financial exchange within a business, such as sales, purchases, and payments. For small businesses, it ensures accurate financial reporting, tax compliance, and effective cash flow management, helping owners make informed decisions, prevent fraud, and plan for growth. This practice is crucial for maintaining financial organization, identifying issues early, and ensuring the business remains on track.",
     },
     {
         icon: <TagIcon className="w-10 h-10" />,
         title: "Financial Statement Generator",
         description:
-            "Ne nam phaedrum consequat, adhuc aliquid ea pri, eum eligendi incorrupte referrentur in. Vix ad senserit salutandi argumentum. Ei eam definiebas reformidans, exerci persecuti no ius.",
+            "Financial statement generation involves creating key reports like income statements, balance sheets, and cash flow statements that summarize a business's financial performance and position. For small businesses, these statements are vital for tracking profitability, managing expenses, and ensuring tax compliance. They provide essential insights for making strategic decisions, securing funding, and planning for growth, helping businesses stay financially sustainable.",
     },
     {
         icon: <LifeBuoyIcon className="w-10 h-10" />,
         title: "Business Financial Forecasting",
         description:
-            "Assum suavitate ea vel, vero erat doming cu cum. Zril ornatus sea cu. Pro ex integre pertinax. Cu cum harum paulo legendos, mei et quod enim mnesarchum, habeo affert laoreet sea ei.",
+            "Business finance forecast involves predicting a company’s future financial performance based on historical data, trends, and assumptions about future conditions. For small businesses, this forecast is crucial for budgeting, managing cash flow, and planning for potential challenges or opportunities. It helps business owners make informed decisions, secure investments, and ensure long-term financial stability by anticipating revenue, expenses, and profitability.",
     },
 ];
 
