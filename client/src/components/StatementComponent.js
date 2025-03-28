@@ -1,171 +1,155 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Navi from "./ui/Navi";
+import StatementSummary from "./ui/StatementSummary";
 
 const StatementComponent = () => {
     const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [categories, setCategories] = useState([]);
-
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [userId, setUserId] = useState(null);
+    const [historicalStatements, setHistoricalStatements] = useState([]);
+    const [message, setMessage] = useState("");
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
 
     useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (storedUser && storedUser.plaidAccessToken) {
-            setUser(storedUser);
+        const id = localStorage.getItem("userID");
+        if (id) {
+            setUserId(id);
         } else {
-            navigate("/link-account");
+            navigate("/login");
         }
     }, [navigate]);
 
-    const newSta = useCallback(async () => {
-        if (!user || !user.id) return;
-        setLoading(true);
+    const applyDateFilter = (txns, month, year) => {
+        return txns.filter(txn => {
+            const txnDate = new Date(txn.date);
+            return (
+                txnDate.getMonth() + 1 === parseInt(month) &&
+                txnDate.getFullYear() === parseInt(year)
+            );
+        });
+    };
+
+    const fetchTransactions = useCallback(async () => {
+        if (!userId) return;
         try {
-            const res = await fetch(`http://localhost:8080/transactions?userId=${user.id}`);
+            const res = await fetch(`http://localhost:8080/transactions?userId=${userId}`);
             const data = await res.json();
             setTransactions(data);
-            setFilteredTransactions(data);
-            extractCategories(data);
-        } catch (error) {
-            console.error("Error fetching transactions:", error);
-        } finally {
-            setLoading(false);
+            setFilteredTransactions(applyDateFilter(data, selectedMonth, selectedYear));
+        } catch (err) {
+            console.error("Failed to fetch transactions:", err);
         }
-    }, [user]);
+    }, [userId, selectedMonth, selectedYear]);
 
     useEffect(() => {
-        if (user) {
+        if (userId) {
             fetchTransactions();
         }
-    }, [user, fetchTransactions]);
+    }, [userId, fetchTransactions]);
 
-    const extractCategories = (transactions) => {
-        const uniqueCategories = new Set();
-        transactions.forEach((txn) => {
-            if (txn.category) {
-                uniqueCategories.add(txn.category);
+    const fetchHistoricalStatements = useCallback(async () => {
+        try {
+            const res = await fetch(`http://localhost:8080/statements?userId=${userId}`);
+            const data = await res.json();
+            setHistoricalStatements(data);
+        } catch (err) {
+            console.error("Failed to fetch historical statements:", err);
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        if (userId) {
+            fetchHistoricalStatements();
+        }
+    }, [userId, fetchHistoricalStatements]);
+
+    const groupAndSumByCategory = (type) => {
+        const isRevenue = type === "revenue";
+        const categories = {};
+
+        filteredTransactions.forEach(txn => {
+            const isPositive = txn.amount > 0;
+            const isMatch = isRevenue ? isPositive : !isPositive;
+
+            if (isMatch) {
+                const cat = txn.category || "Uncategorized";
+                if (!categories[cat]) {
+                    categories[cat] = 0;
+                }
+                categories[cat] += Math.abs(txn.amount);
             }
         });
-        setCategories([...uniqueCategories]);
+
+        return categories;
     };
 
-    const filterTransactions = async () => {
-        if (!startDate || !endDate) return; // Date filters are required
-        setLoading(true);
-        try {
-            const categoryParam = selectedCategory ? `&category=${selectedCategory}` : '';
-            const res = await fetch(
-                `http://localhost:8080/transactions/by-date?userId=${user.id}&startDate=${startDate}&endDate=${endDate}${categoryParam}`
-            );
-            const data = await res.json();
-            setFilteredTransactions(data);
-        } catch (error) {
-            console.error("Error fetching transactions by date:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const filterByCategory = (category) => {
-        setSelectedCategory(category);
-        if (!category) {
-            setFilteredTransactions(transactions);
-        } else {
-            const filtered = transactions.filter((txn) => txn.category === category);
-            setFilteredTransactions(filtered);
-        }
-    };
+    const revenueBreakdown = groupAndSumByCategory("revenue");
+    const expenseBreakdown = groupAndSumByCategory("expense");
+    const totalRevenue = Object.values(revenueBreakdown).reduce((sum, val) => sum + val, 0);
+    const totalExpenses = Object.values(expenseBreakdown).reduce((sum, val) => sum + val, 0);
+    const netCashFlow = totalRevenue - totalExpenses;
 
     return (
         <div className="container mx-auto p-6">
-            <Navi></Navi>
-            <h2 className="text-2xl font-bold mb-4">Transactions</h2>
+            <Navi />
+            <h2 className="text-2xl font-bold mb-4">Statements</h2>
 
-            {/* Filters */}
-            <div className="flex gap-4 mb-4">
-                {/* Date Filter */}
+            {/* Month/Year Filter */}
+            <div className="flex gap-4 mb-6">
                 <div>
-                    <label className="block font-medium">Start Date:</label>
-                    <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="border px-2 py-1"
-                    />
-                </div>
-                <div>
-                    <label className="block font-medium">End Date:</label>
-                    <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="border px-2 py-1"
-                    />
-                </div>
-                <button
-                    onClick={filterTransactions}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                    Filter by Date
-                </button>
-
-                {/* Category Filter */}
-                <div>
-                    <label className="block font-medium">Category:</label>
+                    <label>Month:</label>
                     <select
-                        value={selectedCategory}
-                        onChange={(e) => filterByCategory(e.target.value)}
-                        className="border px-2 py-1"
+                        value={selectedMonth}
+                        onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
                     >
-                        <option value="">All</option>
-                        {categories.map((category, index) => (
-                            <option key={index} value={category}>
-                                {category}
-                            </option>
+                        {months.map((month, index) => (
+                            <option key={index} value={index + 1}>{month}</option>
                         ))}
                     </select>
                 </div>
+                <div>
+                    <label>Year:</label>
+                    <input
+                        type="number"
+                        value={selectedYear}
+                        onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                        min="2000"
+                        max="2099"
+                    />
+                </div>
             </div>
 
-            {/* Transactions Table */}
-            {loading ? (
-                <p>Loading transactions...</p>
-            ) : filteredTransactions.length === 0 ? (
-                <p>No transactions found.</p>
-            ) : (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-300">
-                        <thead>
-                        <tr className="bg-gray-200">
-                            <th className="py-2 px-4 border">Date</th>
-                            <th className="py-2 px-4 border">Name</th>
-                            <th className="py-2 px-4 border">Amount</th>
-                            <th className="py-2 px-4 border">Category</th>
-                            <th className="py-2 px-4 border">Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {filteredTransactions.map((txn, index) => (
-                            <tr key={index} className="text-center">
-                                <td className="py-2 px-4 border">{txn.date}</td>
-                                <td className="py-2 px-4 border">{txn.name}</td>
-                                <td className="py-2 px-4 border">${txn.amount.toFixed(2)}</td>
-                                <td className="py-2 px-4 border">{txn.category || "Unknown"}</td>
-                                <td className={`py-2 px-4 border ${txn.pending ? "text-yellow-500" : "text-green-500"}`}>
-                                    {txn.pending ? "Pending" : "Completed"}
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+            {message && <p className="text-sm text-blue-600 mb-4">{message}</p>}
+
+            {/* Statement Summary */}
+            <StatementSummary
+                revenueBreakdown={revenueBreakdown}
+                expenseBreakdown={expenseBreakdown}
+                totalRevenue={totalRevenue}
+                totalExpenses={totalExpenses}
+                netCashFlow={netCashFlow}
+            />
+
+            {/* Historical Statements */}
+            <div className="mt-12">
+                <h3 className="text-xl font-semibold mb-4 text-light-black">Historical Statements</h3>
+                <ul className="bg-white p-6 rounded-xl shadow-md space-y-4">
+                    {historicalStatements.map((stmt) => (
+                        <li key={stmt.id} className="flex justify-between font-body-2-regular-14-20-0-2px text-light-black">
+                            <span>{`${months[stmt.month - 1]} ${stmt.year}`}</span>
+                            <span>Net Cash Flow: ${stmt.netCashFlow.toFixed(2)}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

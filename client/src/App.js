@@ -27,7 +27,7 @@ const App = () => {
               path="/transactions"
               element={user?.plaidAccessToken ? <TransactionsComponent /> : <Navigate to="/link-account" />}
           />
-          <Route path="/statements" element={<StatementComponent}/>
+          <Route path="/statements" element={<StatementComponent/>}/>
         </Routes>
       </Router>
   );
