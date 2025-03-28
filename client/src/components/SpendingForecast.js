@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import Navi from './ui/Navi';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -67,9 +68,14 @@ const SpendingForecast = () => {
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '20px auto', height: '400px' }}>
-      <Bar data={chartData} options={options} />
-    </div>
+      <div >
+        <Navi></Navi>
+        <div style={{ maxWidth: '800px', margin: '20px auto', height: '400px' }}>
+
+          <Bar data={chartData} options={options} />
+        </div>
+
+      </div>
   );
 };
 
