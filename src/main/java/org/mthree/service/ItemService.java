@@ -24,9 +24,17 @@ public class ItemService {
     }
 
     public String createSandboxPublicToken() throws IOException {
+
+        SandboxPublicTokenCreateRequestOptions options = new SandboxPublicTokenCreateRequestOptions()
+                .overrideUsername("custom_1")
+                .overridePassword("custom_1");
+
         SandboxPublicTokenCreateRequest request = new SandboxPublicTokenCreateRequest()
                 .institutionId("ins_109508")
                 .initialProducts(List.of(Products.AUTH, Products.TRANSACTIONS));
+
+        request.setOptions(options);
+
 
         Response<SandboxPublicTokenCreateResponse> response =
                 plaidApi.sandboxPublicTokenCreate(request).execute();
@@ -52,6 +60,7 @@ public class ItemService {
             throw new RuntimeException("Failed to exchange public token: " + response.errorBody().string());
         }
     }
+
 
     public String createLinkToken(String userId) throws IOException {
         LinkTokenCreateRequestUser user = new LinkTokenCreateRequestUser()

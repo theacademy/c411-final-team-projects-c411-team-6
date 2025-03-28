@@ -24,7 +24,7 @@ public class StatementDaoImpl implements StatementDao {
     @Override
     public Statement createNewStatement(Statement statement) {
 
-        final String INSERT_STATEMENT = "INSERT INTO statements(user_id, month, year, total_income, total_expenses, net_cash_flow) VALUES(?, ?, ?, ?, ?, ?)";
+        final String INSERT_STATEMENT = "INSERT INTO statements(user_id, month, year, total_income, total_expenses) VALUES(?, ?, ?, ?, ?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {
@@ -35,12 +35,14 @@ public class StatementDaoImpl implements StatementDao {
             prepared.setInt(3, statement.getYear());
             prepared.setBigDecimal(4, statement.getTotalIncome());
             prepared.setBigDecimal(5, statement.getTotalExpenses());
-            prepared.setBigDecimal(6, statement.getNetCashFlow());
+
 
             return prepared;
         }, keyHolder);
 
         statement.setId(keyHolder.getKey().intValue());
+        statement.setNetCashFlow(statement.getTotalIncome().subtract(statement.getTotalExpenses()));
+
         return statement;
     }
 
