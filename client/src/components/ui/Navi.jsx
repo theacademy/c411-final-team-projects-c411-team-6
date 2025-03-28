@@ -1,7 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const Navi = () => {
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem("userID");
+        navigate("/");
+    };
+
     return (
         <header className="w-full h-[88px] bg-white">
             <div className="relative h-full flex items-center justify-between px-8">
@@ -43,6 +49,14 @@ const Navi = () => {
                         </ul>
                     </div>
                 </nav>
+
+                {/* Logout Button */}
+                <button
+                    onClick={handleLogout}
+                    className="bg-red-500 text-white px-6 py-2 rounded"
+                >
+                    Logout
+                </button>
             </div>
         </header>
     );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import PlaidLinkComponent from "./PlaidLinkComponent";
-import LogoutComponent from "./LogoutComponent";
 import Navi from "./ui/Navi";
+import { Button } from "./ui/button";
 
 const TransactionsComponent = () => {
   const [transactions, setTransactions] = useState([]);
@@ -11,7 +11,6 @@ const TransactionsComponent = () => {
   const [endDate, setEndDate] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
-  const [user] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
   console.log("USER ID: " + localStorage.getItem("userID"));
@@ -107,8 +106,9 @@ const TransactionsComponent = () => {
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
       {/*<LogoutComponent  />*/}
       {/* Always show the PlaidLinkComponent */}
-      <PlaidLinkComponent onSuccessCallback={refreshData} />
-
+      <div className="p-3">
+        <PlaidLinkComponent onSuccessCallback={refreshData} />
+      </div>
       {/* Display Accounts If Any */}
       {accounts.length > 0 && (
         <div className="mt-6">
@@ -163,9 +163,16 @@ const TransactionsComponent = () => {
               className="border px-2 py-1"
             />
           </div>
-          <button onClick={filterTransactions} className="bg-blue-500 text-white px-4 py-2 rounded">
-            Filter by Date
-          </button>
+          <div className="p-6">
+              <Button
+                variant="default"
+                size="default"
+                onClick={filterTransactions}
+                className="bg-blue-500 text-white"
+              >
+                Filter by Date
+              </Button>
+          </div>
 
           {/* Category Filter */}
           <div>

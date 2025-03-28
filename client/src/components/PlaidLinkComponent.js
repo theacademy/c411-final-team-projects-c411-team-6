@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { usePlaidLink } from "react-plaid-link";
 import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 const PlaidLinkComponent = ({ onSuccessCallback }) => {
   const [linkToken, setLinkToken] = useState(null);
@@ -38,12 +39,8 @@ const PlaidLinkComponent = ({ onSuccessCallback }) => {
 
         if (!response.ok) throw new Error("Failed to exchange public token");
 
-        const data = await response.json();
-        const updatedUser = { id: storedUserID, plaidAccessToken: data.access_token };
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-
         if (onSuccessCallback) {
-          onSuccessCallback(); // 🔁 trigger refresh
+          onSuccessCallback();
         }
 
         navigate("/transactions");
@@ -57,11 +54,11 @@ const PlaidLinkComponent = ({ onSuccessCallback }) => {
     },
   });
 
-  return (
-      <button onClick={() => open()} disabled={!ready}>
-        Connect a Bank Account
-      </button>
-  );
+ return (
+     <Button onClick={() => open()} disabled={!ready} variant="primary" size="default" className="bg-blue-500 text-white">
+       Connect a Bank Account
+     </Button>
+   );
 };
 
 export default PlaidLinkComponent;
