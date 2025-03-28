@@ -49,7 +49,7 @@ const Home = () => {
                     <div className="absolute w-full h-full bg-accent-default opacity-[0.06]" />
 
                     <div className="relative h-full flex items-center">
-                        <div className="w-full max-w-[1110px] mx-auto flex flex-col lg:flex-row items-center justify-between px-4 lg:px-8 gap-8">
+                        <div className="w-full max-w-[1110px] bg-muted mx-auto flex flex-col lg:flex-row items-center justify-between px-4 lg:px-8 gap-8">
 
                             {/* Left Side Text */}
                             <div className="flex-1 flex flex-col justify-center">

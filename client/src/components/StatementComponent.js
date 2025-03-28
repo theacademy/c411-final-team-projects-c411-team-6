@@ -103,7 +103,7 @@ const StatementComponent = () => {
 
     return (
         <div className="bg-muted w-full min-h-screen">
-            <Navi />
+            <Navi></Navi>
             <div className="max-w-6xl mx-auto px-6 py-8">
                 <h2 className="text-3xl font-bold mb-6 text-light-black">Financial Statements</h2>
 

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navi = () => {
     return (
-        <header className="w-full h-[88px] bg-accent-default">
+        <header className="w-full h-[88px] bg-white">
             <div className="relative h-full flex items-center justify-between px-8">
                 {/* Logo Section */}
                 <Link to="/statements" className="w-[70px] h-8 flex items-center">
@@ -14,12 +14,12 @@ const Navi = () => {
 
                 {/* Navigation Links Section */}
                 <nav className="flex-1 flex justify-center">
-                    <div className="w-[840px] h-[62px] border border-solid border-[#d9d9d9] rounded-[25px] bg-accent-default flex items-center justify-center">
+                    <div className="w-[840px] h-[62px] border border-solid border-[#d9d9d9] rounded-[25px] bg-white flex items-center justify-center">
                         <ul className="flex space-x-16">
                             <li>
                                 <Link
                                     to="/transactions"
-                                    className="font-button-bold-14-18-0-3px text-light-white py-2 px-4 rounded-md hover:bg-accent-light"
+                                    className="font-button-bold-14-18-0-3px py-2 px-4 rounded-md hover:bg-accent-light"
                                 >
                                     Transactions
                                 </Link>
@@ -27,15 +27,15 @@ const Navi = () => {
                             <li>
                                 <Link
                                     to="/statements"
-                                    className="font-button-bold-14-18-0-3px text-light-white py-2 px-4 rounded-md hover:bg-accent-light"
+                                    className="font-button-bold-14-18-0-3px py-2 px-4 rounded-md hover:bg-accent-light"
                                 >
-                                    Statements
+                                    Overview & Statements
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     to="/forecast"
-                                    className="font-button-bold-14-18-0-3px text-light-white py-2 px-4 rounded-md hover:bg-accent-light"
+                                    className="font-button-bold-14-18-0-3px py-2 px-4 rounded-md hover:bg-accent-light"
                                 >
                                     Forecast
                                 </Link>

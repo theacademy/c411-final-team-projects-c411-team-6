@@ -3,6 +3,7 @@ import Home from "./components/Home";
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
 import TransactionsComponent from "./components/TransactionsComponent";
+import StatementComponent from "./components/StatementComponent";
 
 const App = () => {
 

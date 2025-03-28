@@ -1,6 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer components {
+  :root {
+    --accent-default: rgba(60, 100, 177, 1);
+    --light-black: rgba(55, 63, 65, 1);
+    --light-gray: rgba(195, 203, 205, 1);
+    --light-gray-dark: rgba(115, 123, 125, 1);
+    --light-white: rgba(255, 255, 255, 1);
+  }
+}
 
 :root {
   --primary: 222.2 47.4% 11.2%;
