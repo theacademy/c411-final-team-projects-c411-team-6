@@ -66,6 +66,7 @@ const TransactionsComponent = () => {
       if (txn.category) uniqueCategories.add(txn.category);
     });
     setCategories([...uniqueCategories]);
+
   };
 
   // Filter Transactions by Date
