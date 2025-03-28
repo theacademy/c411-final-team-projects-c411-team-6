@@ -4,6 +4,7 @@ import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
 import TransactionsComponent from "./components/TransactionsComponent";
 import StatementComponent from "./components/StatementComponent";
+import SpendingForecast from "./components/SpendingForecast";
 
 const App = () => {
 
