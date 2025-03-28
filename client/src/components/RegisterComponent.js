@@ -10,8 +10,8 @@ const Register = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [setError] = useState('');
+  const [setSuccessMessage] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -42,10 +42,6 @@ const Register = () => {
 
   const handleLoginClick = () => {
     navigate("/login");
-  };
-
-  const handleRegisterClick = () => {
-    navigate("/register");
   };
 
 

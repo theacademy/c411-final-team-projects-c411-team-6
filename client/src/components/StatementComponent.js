@@ -4,7 +4,7 @@ import Navi from "./ui/Navi";
 import StatementSummary from "./ui/StatementSummary";
 
 const StatementComponent = () => {
-    const [transactions, setTransactions] = useState([]);
+    const [setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -57,7 +57,7 @@ const StatementComponent = () => {
         } catch (err) {
             console.error("Failed to fetch transactions:", err);
         }
-    }, [userId, selectedMonth, selectedYear]);
+    }, [userId, selectedMonth, selectedYear, setTransactions]);
 
     const fetchHistoricalStatements = useCallback(async () => {
         try {

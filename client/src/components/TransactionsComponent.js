@@ -109,8 +109,6 @@ const TransactionsComponent = () => {
       {/* Always show the PlaidLinkComponent */}
       <PlaidLinkComponent onSuccessCallback={refreshData} />
 
-
-
       {/* Display Accounts If Any */}
       {accounts.length > 0 && (
         <div className="mt-6">

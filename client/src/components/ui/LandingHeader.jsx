@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const LandingHeader = ({ title = "FlowTrack", onLoginClick, buttonText = "Log In", bgColor = "bg-white" }) => {
     return (
-        <header className="w-full h-[88px] ${bgColor}">
+        <header className={`w-full h-[88px] ${bgColor}`}>
             <div className="relative h-full flex items-center justify-between px-8">
                 {/* Logo */}
                 <Link to="/" className="w-[70px] h-8 flex items-center">

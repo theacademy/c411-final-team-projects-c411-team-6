@@ -3,6 +3,7 @@ import Home from "./components/Home";
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
 import TransactionsComponent from "./components/TransactionsComponent";
+import StatementComponent from "./components/StatementComponent";
 
 const App = () => {
 
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/login" element={<Login  />} />
         <Route path="/register" element={<Register />} />
        <Route  path="/transactions" element={<TransactionsComponent  />}/>
+       <Route path='/statement' element={<StatementComponent />} />
       </Routes>
     </Router>
   );
