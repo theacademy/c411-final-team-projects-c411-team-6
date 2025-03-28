@@ -173,7 +173,7 @@ const StatementComponent = () => {
         });
 
         // Save PDF
-        doc.save(`Statement_${months[selectedMonth - 1]}_${selectedYear}.pdf`);
+        doc.save(`IncomeStatement_${months[selectedMonth - 1]}_${selectedYear}.pdf`);
     };
 
 
