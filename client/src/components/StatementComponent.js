@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import Navi from "./ui/Navi";
 import StatementSummary from "./ui/StatementSummary";
 
@@ -101,6 +103,81 @@ const StatementComponent = () => {
     const totalExpenses = Object.values(expenseBreakdown).reduce((sum, val) => sum + val, 0);
     const netCashFlow = totalRevenue - totalExpenses;
 
+
+    const downloadStatement = () => {
+        const doc = new jsPDF();
+
+        // Set Title
+        doc.setFontSize(18);
+        doc.setTextColor(40, 40, 40); // Dark text color
+        doc.text("Financial Statement", 20, 20);
+
+        // Month/Year
+        doc.setFontSize(12);
+        doc.setTextColor(100, 100, 100); // Lighter text color
+        doc.text(`Month: ${months[selectedMonth - 1]}, Year: ${selectedYear}`, 20, 30);
+
+        // Table Data: Revenue, Expenses, Gains, Losses, Net Income
+        const tableData = [
+            // Row 1: Headers
+            ["Category", "Details", "Amount"],
+            // Row 2: Revenue and its details
+            ["Revenue", "Product Sales", `$${totalRevenue.toFixed(2)}`],
+            ["", "Service Revenue", "$2000"], // Example breakdown
+            ["", "Total Revenue", `$${totalRevenue.toFixed(2)}`], // Summed up
+            // Row 3: Expenses and its details
+            ["Expenses", "Rent", "$1000"],
+            ["", "Salaries", "$2500"],
+            ["", "Marketing", "$1000"],
+            ["", "Total Expenses", "$4500"], // Summed up
+            // Row 4: Gains
+            ["Gains", "Gain from Asset Sale", "$500"],
+            // Row 5: Losses
+            ["Losses", "Loss from Investment", "$200"],
+            // Row 6: Net Income
+            ["Net Income", "Net Income", `$${netCashFlow.toFixed(2)}`]
+        ];
+
+        // Add Table
+        autoTable(doc,{
+            startY: 40,
+            head: [tableData[0]],
+            body: tableData.slice(1),
+            theme: 'striped',
+            styles: {
+                fontSize: 10,
+                cellPadding: 5,
+                halign: 'center',
+                valign: 'middle',
+                textColor: [0, 0, 0],
+                fontStyle: 'normal',
+                overflow: 'linebreak',
+                lineHeight: 1.5,
+                maxWidth: 100,
+            },
+            headStyles: {
+                fillColor: [174, 198, 207],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                halign: 'center',
+                valign: 'middle',
+                fontSize: 10,
+            },
+            columnStyles: {
+                0: { cellWidth: 50 },
+                1: { cellWidth: 'auto' },
+                2: { cellWidth: 40 }
+            },
+            margin: { top: 10 },
+            overflow: 'linebreak',
+        });
+
+        // Save PDF
+        doc.save(`Statement_${months[selectedMonth - 1]}_${selectedYear}.pdf`);
+    };
+
+
+
     return (
         <div className="bg-muted w-full min-h-screen">
             <Navi></Navi>
@@ -162,6 +239,17 @@ const StatementComponent = () => {
                             </li>
                         ))}
                     </ul>
+                </div>
+                {/* Download Button */}
+                <div className="mt-8">
+                    {filteredTransactions.length > 0 && (
+                        <button
+                            onClick={downloadStatement}
+                            className="bg-green-600 text-white px-4 py-2 rounded mt-8"
+                        >
+                            Download Statement as PDF
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
