@@ -101,12 +101,12 @@ public class TransactionController {
     }
 
     @GetMapping("/forecast")
-    public ResponseEntity<Map<String, Double>> getSpendingForecast(
+    public ResponseEntity<Map<String, Object>> getSpendingForecast(
             @RequestParam String userId,
             @RequestParam(defaultValue = "6") int historicalMonths,
             @RequestParam(defaultValue = "3") int forecastMonths) {
         try {
-            Map<String, Double> forecast = forecastService.forecastSpending(userId, historicalMonths, forecastMonths);
+            Map<String, Object> forecast = forecastService.forecastSpending(userId, historicalMonths, forecastMonths);
             return ResponseEntity.ok(forecast);
         } catch (Exception e) {
             e.printStackTrace();

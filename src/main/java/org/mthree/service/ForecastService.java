@@ -8,5 +8,5 @@ import java.util.Map;
 
 @Service
 public interface ForecastService {
-    Map<String, Double> forecastSpending(String userId, int historicalMonths, int forecastMonths);
+    Map<String, Object> forecastSpending(String userId, int historicalMonths, int forecastMonths);
 }

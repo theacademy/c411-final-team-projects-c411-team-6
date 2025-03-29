@@ -19,34 +19,34 @@ public class ForecastServiceImpl implements ForecastService {
     }
 
     @Override
-    public Map<String, Double> forecastSpending(String userId, int historicalMonths, int forecastMonths) {
+    public Map<String, Object> forecastSpending(String userId, int historicalMonths, int forecastMonths) {
         List<Transaction> transactions = transactionService.getTransactions(userId, historicalMonths);
         System.out.println("Transactions fetched: " + transactions.size());
-        System.out.println("Raw transactions: " + transactions);
 
         if (transactions.isEmpty()) {
             System.out.println("No transactions, returning default forecast");
-            return getDefaultForecast();
+            return Map.of(
+                    "historical", getDefaultHistoricalData(historicalMonths),
+                    "forecast", getDefaultForecast()
+            );
         }
 
-        Map<String, Double> avgMonthlySpending = calculateWeightedMonthlyAverages(transactions, historicalMonths);
+        Map<String, Object> avgMonthlySpending = calculateWeightedMonthlyAverages(transactions, historicalMonths);
 
-        Map<String, Double> forecast = new HashMap<>();
+        Map<String, Object> forecast = new HashMap<>();
         avgMonthlySpending.forEach((category, avg) -> {
-            double forecastedAmount = avg * forecastMonths;
+            double forecastedAmount = (Double) avg * forecastMonths;
             forecast.put(category, forecastedAmount);
         });
 
         addMissingCategories(forecast);
-        System.out.println("Forecast calculated: " + forecast);
+        Map<String, Object> historicalData = calculateHistoricalSpending(transactions, historicalMonths);
 
-        return forecast;
+        return Map.of("historical", historicalData, "forecast", forecast);
     }
 
-    private Map<String, Double> calculateWeightedMonthlyAverages(List<Transaction> transactions, int historicalMonths) {
+    private Map<String, Object> calculateWeightedMonthlyAverages(List<Transaction> transactions, int historicalMonths) {
         LocalDate now = LocalDate.now();
-        LocalDate startDate = now.minusMonths(historicalMonths);
-
         LocalDate latestDate = transactions.stream()
                 .map(Transaction::getDate)
                 .max(LocalDate::compareTo)
@@ -61,11 +61,11 @@ public class ForecastServiceImpl implements ForecastService {
                                     int monthsAgo = (int) latestDate.until(t.getDate(), java.time.temporal.ChronoUnit.MONTHS);
                                     return Math.max(0, Math.min(historicalMonths - 1, historicalMonths + monthsAgo));
                                 },
-                                Collectors.summingDouble(t -> t.getAmount() < 0 ? -t.getAmount() : t.getAmount())
+                                Collectors.summingDouble(t -> Math.abs(t.getAmount()))
                         )
                 ));
 
-        Map<String, Double> weightedAverages = new HashMap<>();
+        Map<String, Object> weightedAverages = new HashMap<>();
         monthlyTotals.forEach((category, monthTotals) -> {
             double totalWeighted = 0.0;
             int totalWeight = 0;
@@ -79,29 +79,51 @@ public class ForecastServiceImpl implements ForecastService {
             weightedAverages.put(category, avg);
         });
 
-        System.out.println("Weighted averages: " + weightedAverages);
         return weightedAverages;
     }
 
-    private Map<String, Double> getDefaultForecast() {
-        Map<String, Double> defaultForecast = new HashMap<>();
-        defaultForecast.put("Food and Drink", 0.0);
-        defaultForecast.put("Travel", 0.0);
-        defaultForecast.put("Shops", 0.0);
-        defaultForecast.put("Entertainment", 0.0);
-        defaultForecast.put("Bills and Utilities", 0.0);
-        defaultForecast.put("Transportation", 0.0);
-        defaultForecast.put("Health", 0.0);
-        defaultForecast.put("Unknown", 0.0);
-        defaultForecast.put("Transfer", 0.0); // Added Transfer
+    private Map<String, Object> calculateHistoricalSpending(List<Transaction> transactions, int historicalMonths) {
+        LocalDate now = LocalDate.now();
+        Map<String, Object> monthlySpending = new HashMap<>();
+
+        for (int i = 0; i < historicalMonths; i++) {
+            LocalDate monthStart = now.minusMonths(i).withDayOfMonth(1);
+            LocalDate monthEnd = monthStart.plusMonths(1).minusDays(1);
+
+            double total = transactions.stream()
+                    .filter(t -> !t.isPending() && !t.getDate().isBefore(monthStart) && !t.getDate().isAfter(monthEnd))
+                    .mapToDouble(Transaction::getAmount)
+                    .sum();
+
+            monthlySpending.put(monthStart.getMonth().toString() + " " + monthStart.getYear(), Math.abs(total));
+        }
+
+        return monthlySpending;
+    }
+
+    private Map<String, Object> getDefaultForecast() {
+        Map<String, Object> defaultForecast = new HashMap<>();
+        String[] categories = {"Food and Drink", "Travel", "Shops", "Entertainment", "Bills and Utilities", "Transportation", "Health", "Unknown", "Transfer"};
+        for (String category : categories) {
+            defaultForecast.put(category, 0.0);
+        }
         return defaultForecast;
     }
 
-    private void addMissingCategories(Map<String, Double> forecast) {
-        String[] commonCategories = {
-                "Food and Drink", "Travel", "Shops", "Entertainment",
-                "Bills and Utilities", "Transportation", "Health", "Unknown", "Transfer"
-        };
+    private Map<String, Object> getDefaultHistoricalData(int historicalMonths) {
+        Map<String, Object> defaultHistoricalData = new HashMap<>();
+        LocalDate now = LocalDate.now();
+
+        for (int i = 0; i < historicalMonths; i++) {
+            LocalDate monthStart = now.minusMonths(i).withDayOfMonth(1);
+            defaultHistoricalData.put(monthStart.getMonth().toString() + " " + monthStart.getYear(), 0.0);
+        }
+
+        return defaultHistoricalData;
+    }
+
+    private void addMissingCategories(Map<String, Object> forecast) {
+        String[] commonCategories = {"Food and Drink", "Travel", "Shops", "Entertainment", "Bills and Utilities", "Transportation", "Health", "Unknown", "Transfer"};
         for (String category : commonCategories) {
             forecast.putIfAbsent(category, 0.0);
         }
