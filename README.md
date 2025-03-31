@@ -36,13 +36,38 @@ The Financial Management App is a Spring Boot-based RESTful application designed
    git clone https://github.com/your-repo/financial-app.git
    cd financial-app
    ```
-2. Configure the database in `application.properties`:
+
+2. Set up environment variables in  `.env`:
    ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/your_db
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
+    # Plaid API credentials
+    PLAID_CLIENT_ID=your_plaid_client_id
+    PLAID_SECRET=your_plaid_secret
+    PLAID_ENVIRONMENT=sandbox|development|production
+    PLAID_PRODUCTS=auth,transactions  # comma-separated list
+    PLAID_COUNTRY_CODES=US,CA         # comma-separated list
+    PLAID_REDIRECT_URI=your_redirect_uri_if_applicable
+    
+     # Database configuration
+    DB_URL=jdbc:mysql://localhost:3306/your_db
+    DB_USER=your_db_username
+    DB_PASS=your_db_password
    ```
-3. Build and run the application:
+3. Configure the database in `application.properties`:
+   ```properties
+    # Plaid configuration
+    plaid.client.id=${PLAID_CLIENT_ID}
+    plaid.secret=${PLAID_SECRET}
+    plaid.environment=${PLAID_ENVIRONMENT:sandbox}
+    plaid.products=${PLAID_PRODUCTS}
+    plaid.country.code=${PLAID_COUNTRY_CODES}
+    plaid.redirect.uri=${PLAID_REDIRECT_URI}
+    
+    # Database configuration
+    spring.datasource.url=${DB_URL}
+    spring.datasource.username=${DB_USER}
+    spring.datasource.password=${DB_PASS}
+   ```
+4. Build and run the application:
    ```sh
    mvn spring-boot:run
    ```
