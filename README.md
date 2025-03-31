@@ -4,7 +4,7 @@
 The Financial Management App is a Spring Boot-based RESTful application designed to help small businesses track, manage, and project financial goals. It provides an intuitive interface to monitor transactions, generate financial statements, and forecast business spending.
 
 ## Features
-- **Track Transactions **: 
+- **Track Transactions**: 
   - View all business transaction history.
   - Filter and categorize transactions by month or year.
   - Classify transactions into revenues and expenses.
